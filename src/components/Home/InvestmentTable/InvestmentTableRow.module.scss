@@ -1,0 +1,19 @@
+.row {
+  display: table-row;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.photo {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.cell {
+  padding: 10px;
+  max-width: 250px; /* Максимальная ширина ячейки */
+  word-wrap: break-word; /* Перенос слов */
+  overflow: hidden; /* Скрытие переполнения */
+}
