@@ -1,0 +1,61 @@
+.wrap {
+  display: flex;
+  justify-content: space-between;
+  padding: 30px 0;
+}
+
+.containerInfoInvest {
+  display: flex;
+  gap: 50px;
+}
+
+.addNewItem {
+  color: white;
+  background-color: #1E90FF;
+
+  padding: 10px 20px;
+
+  border: none;
+  border-radius: 2px;
+
+  font-size: 16px;
+  cursor: pointer;
+
+  transition: all 0.3s ease;
+}
+
+.addNewItem:hover {
+  background-color: #4169E1;
+
+  transform: scale(1.05);
+
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.addNewItem:active {
+  transform: scale(0.95);
+
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.allInvest {
+  text-align: center;
+
+  color: #FFF;
+  background-color: lighten($color: #1E90FF, $amount: 10%);
+
+  padding: 10px 20px;
+
+  border-radius: 3px;
+  box-shadow: 2px 3px 4px 0 rgba(0, 0, 0, 0.15);
+
+  p {
+    font-size: 14px;
+
+    &:first-of-type {
+      font-size: 20px;
+
+      padding-bottom: 2px;
+    }
+  }
+}
