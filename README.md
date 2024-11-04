@@ -1,50 +1,47 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# SteamFol
 
-Currently, two official plugins are available:
+**SteamFol** — это сайт для отслеживания инвестиций в CS2. Проект создан для удобного просмотра своих вложений в рублёвой валюте. Одной из главных задач SteamFol является точное отображение инвестиций, даже если их стоимость ниже 0.01 цента, что решает проблему, с которой сталкиваются другие подобные сервисы.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Основные особенности
 
-## Expanding the ESLint configuration
+- Отслеживание стоимости инвестиций в CS2 в рублях.
+- Поддержка мелких вложений (стоимость ниже 0.01 цента).
+- Удобный интерфейс для мониторинга финансовых вложений в реальном времени.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Используемые технологии
 
-- Configure the top-level `parserOptions` property like this:
+- **React** + **TypeScript** для создания компонентов.
+- **Vite** для сборки и разработки клиентской части.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Установка и запуск
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+1. Клонируйте репозиторий:
+   ```bash
+   git clone https://github.com/Arqwels/SteamFol.git
+   cd SteamFol
+   ```
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+2. Установите зависимости:
+   ```bash
+   npm install
+   ```
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+3. Запустите проект:
+   ```bash
+   npm run dev
+   ```
+
+Теперь проект должен быть доступен по адресу `http://localhost:3000`.
+
+## Структура проекта (кратко)
+
+- `src/` — папка с исходным кодом, включающая компоненты, стили и другие основные файлы проекта.
+
+## Автор
+
+- **Arqwels**
+
+## Лицензия
+
+Этот проект распространяется без определённой лицензии. Подробности можно уточнить у автора.
