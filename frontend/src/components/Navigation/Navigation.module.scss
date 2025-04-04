@@ -1,0 +1,28 @@
+
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  padding: 50px 0;
+  color: #FFF;
+}
+
+.invest {
+  width: 100%;
+  padding: 20px 0;
+  background-color: rgba(255, 255, 255, 0.03);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  text-align: center;
+  box-sizing: border-box;
+  p:first-of-type {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  p {
+    font-size: 12px;
+    font-family: 'Montserrat', sans-serif;
+  }
+}

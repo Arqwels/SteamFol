@@ -1,0 +1,34 @@
+.profit {
+  color: var(--color-profit);
+}
+
+.loss {
+  color: var(--color-loss);
+}
+
+
+// TableCell_Object.tsx
+.object {
+  > img {
+    width: 50px;
+  }
+}
+
+// TableCell_Price24h.tsx
+.price24h {
+  flex-direction: column;
+}
+
+// TableCell_InvestmentsAndCount.tsx
+.investmentsAndCount {
+  flex-direction: column;
+}
+
+.investmentCount {
+  color: #9E9E9E;
+}
+
+// TableCell_CurrentProfit.tsx
+.currentProfit {
+  flex-direction: column;
+}

@@ -1,0 +1,176 @@
+.addSkin {
+  max-width: 450px;
+  width: 100%;
+  padding: 50px;
+  background-color: var(--color-background-modal);
+
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  box-sizing: border-box;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.addSkinInput {
+  width: 100%;
+  padding: 12px 18px;
+
+  background-color: var(--color-background-modal);
+  color: #FFF;
+  font-family: var(--main-font);
+  font-size: 16px;
+
+  outline: none;
+  box-sizing: border-box;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  &:focus {
+    border-color: #747474;
+  }
+}
+
+.priceAndCount {
+  display: flex;
+  align-items: center;
+  margin-top: 50px;
+
+  svg {
+    width: 14%;
+  }
+}
+
+.wrapTotalSpent {
+  position: relative;
+  margin-top: 30px;
+}
+.noFocusOutline:focus {
+  outline: none;
+  box-shadow: none;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+.labelTotalSpent {
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  color: #999;
+  transition: 0.2s ease all;
+  pointer-events: none;
+  font-size: 14px;
+  padding-inline: 4px;
+}
+.labelFocused {
+  top: -10px;
+  left: 14px;
+  font-size: 12px;
+  color: #747474;
+  background-color: var(--color-background-modal);
+  z-index: 2;
+}
+
+.addSkinBtn {
+  width: 100%;
+  background-color: #FFF;
+  padding: 12px 0px;
+  margin-top: 50px;
+  border-radius: 10px;
+
+  font-family: var(--main-font);
+  font-size: 18px;
+  font-weight: 700;
+
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.25);
+    background-color: #f8f8f8;
+  }
+
+  &:active {
+    scale: 0.98;
+    transform: translateY(1px);
+    box-shadow: none;
+    background-color: #EEE;
+  }
+}
+
+.closeModal {
+  position: absolute;
+  cursor: pointer;
+  right: 3%;
+  top: 3%;
+
+  width: 32px;
+  height: 32px;
+
+  svg {
+    width: 100%;
+  }
+}
+
+
+.searchBlock {
+  position: relative;
+}
+
+.searchResults {
+  position: absolute;
+  width: 100%;
+  max-height: 300px;
+  overflow-y: auto;
+  background: var(--color-background-modal);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  margin-top: 8px;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  top: 100%;
+  left: 0;
+}
+
+.resultsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.resultItem {
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.03);
+  }
+}
+
+.skinImage {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  margin-right: 15px;
+}
+
+.skinName {
+  font-size: 14px;
+  color: #FFF;
+  margin-bottom: 4px;
+}
+
+.statusMessage {
+  padding: 16px;
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+  margin: 0;
+}

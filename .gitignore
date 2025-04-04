@@ -1,0 +1,24 @@
+# Node modules
+node_modules/
+
+# Logs
+logs
+*.log
+
+# Build
+dist/
+build/
+
+# Env files
+.env
+**/.env
+
+# IDEs
+.vscode/
+.idea/
+
+# DB and misc
+*.sqlite
+*.bak
+
+/temp.txt
