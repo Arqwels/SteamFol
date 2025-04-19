@@ -16,3 +16,7 @@ export interface CreateInvestmentRequest {
   buyPrice: number;
   dateBuyItem: string;
 }
+
+export interface UpdateInvestmentRequest extends CreateInvestmentRequest {
+  id: number;
+}
