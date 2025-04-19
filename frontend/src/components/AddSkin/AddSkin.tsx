@@ -3,8 +3,10 @@ import styles from './AddSkin.module.scss';
 import PlusIcon from '../Svg/PlusIcon';
 import { FloatingLabelInput } from '../Common/FloatingLabelInput/FloatingLabelInput';
 import { Modal } from '../Modal/Modal';
-import { useSearchQuery, ISkin } from '../../api/searchApi';
+import { useSearchQuery } from '../../api/searchApi';
 import { useDebounce } from '../../hooks/useDebounce';
+import { Skin } from '../../types/skin';
+import { useCreateInvestmentMutation } from '../../api/investmentApi';
 
 interface AddSkinProps {
   active: boolean;
@@ -14,18 +16,19 @@ interface AddSkinProps {
 export const AddSkin = ({ active, setActive }: AddSkinProps) => {
   const [ purchasePrice, setPurchasePrice ] = useState<number | null>(null);
   const [ countItems, setCountItems ] = useState<number | null>(null);
-  const [ searchQuery, setSearchQuery ] = useState('');
-  const [ selectedSkin, setSelectedSkin ] = useState<ISkin | null>(null);
-  const [ showResults, setShowResults ] = useState(false);
+  const [ searchQuery, setSearchQuery ] = useState<string>('');
+  const [ selectedSkin, setSelectedSkin ] = useState<Skin | null>(null);
+  const [ showResults, setShowResults ] = useState<boolean>(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
   const { data: searchResults, error, isLoading } = useSearchQuery(debouncedSearchQuery, {
     skip: debouncedSearchQuery.trim() === '',
   });
+  const [ createInvestment, { isLoading: isCreating  } ] = useCreateInvestmentMutation();
 
   // Обработчик выбора скина
-  const handleSkinSelect = (skin: ISkin) => {
+  const handleSkinSelect = (skin: Skin) => {
     setSearchQuery(skin.market_name);
     setSelectedSkin(skin);
     setShowResults(false);
@@ -45,6 +48,17 @@ export const AddSkin = ({ active, setActive }: AddSkinProps) => {
     document.addEventListener('mousedown', handleClickOutside, true);
     return () => document.removeEventListener('mousedown', handleClickOutside, true);
   }, []);
+
+  // Эффект для сброса значений при закрытии модального окна
+  useEffect(() => {
+    if (!active) {
+      setPurchasePrice(null);
+      setCountItems(null);
+      setSearchQuery('');
+      setSelectedSkin(null);
+      setShowResults(false);
+    }
+  }, [active]);
 
   // Рендер списка поиска
   const renderSearchResults = () => {
@@ -72,15 +86,23 @@ export const AddSkin = ({ active, setActive }: AddSkinProps) => {
   };
 
   // Отправка формы
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    // При отправле нужно посмотреть в БД и на сервере какие данные точно нужно отправить и написать interface
     if (selectedSkin && purchasePrice && countItems) {
-      console.log('Данные для отправки:', { selectedSkin, purchasePrice, countItems, totalSpent });
-      setActive(false);
-      setSearchQuery('');
-      setSelectedSkin(null);
-      setPurchasePrice(null);
-      setCountItems(null);
-      setShowResults(false);
+      const newInvestment = {
+        idItem: selectedSkin.id,
+        countItems,
+        buyPrice: purchasePrice,
+        dateBuyItem: new Date().toISOString(), // Можно заменить на пользовательскую дату
+      };
+
+      try {
+        const response = await createInvestment(newInvestment).unwrap();
+        console.log('Успешно добавлено:', response);
+        setActive(false);
+      } catch (error) {
+        console.error('Ошибка при добавлении инвестиции:', error);
+      }
     }
   };
 
@@ -90,11 +112,11 @@ export const AddSkin = ({ active, setActive }: AddSkinProps) => {
         <div className={styles.searchBlock} ref={searchRef}>
           <div className={styles.inputContainer}>
             <input
-              type="text"
-              placeholder="Поиск скинов..."
+              type='text'
+              placeholder='Поиск скинов...'
               className={styles.addSkinInput}
               value={searchQuery}
-              autoComplete="off"
+              autoComplete='off'
               onChange={(e) => {
                 const value = e.target.value;
                 setSearchQuery(value);
@@ -117,44 +139,48 @@ export const AddSkin = ({ active, setActive }: AddSkinProps) => {
 
         <div className={styles.priceAndCount}>
           <FloatingLabelInput
-            id="purchasePrice"
-            label="Цена покупки"
+            id='purchasePrice'
+            label='Цена покупки'
             value={purchasePrice}
             onChange={setPurchasePrice}
-            type="decimal"
+            type='decimal'
             decimalPlaces={2}
             style={{ minWidth: '180px' }}
           />
           <PlusIcon />
           <FloatingLabelInput
-            id="count"
-            label="Количество"
+            id='count'
+            label='Количество'
             value={countItems}
             onChange={setCountItems}
-            type="integer"
+            type='integer'
           />
         </div>
 
         <div className={styles.wrapTotalSpent}>
           <input
-            type="text"
-            id="totalSpent"
-            placeholder=" "
+            type='text'
+            id='totalSpent'
+            placeholder=' '
             value={totalSpent}
             className={`${styles.addSkinInput} ${styles.noFocusOutline}`}
             readOnly
             tabIndex={-1}
           />
           <label
-            htmlFor="totalSpent"
+            htmlFor='totalSpent'
             className={`${styles.labelTotalSpent} ${totalSpent ? styles.labelFocused : ''}`}
           >
             Всего потрачено
           </label>
         </div>
 
-        <button className={styles.addSkinBtn} onClick={handleSubmit} disabled={!selectedSkin || !purchasePrice || !countItems}>
-          Добавить
+        <button
+          className={styles.addSkinBtn}
+          onClick={handleSubmit}
+          disabled={!selectedSkin || !purchasePrice || !countItems || isCreating}
+        >
+          {isCreating ? 'Добавление...' : 'Добавить'}
         </button>
         <button className={styles.closeModal} onClick={() => setActive(false)}>
           <PlusIcon />
