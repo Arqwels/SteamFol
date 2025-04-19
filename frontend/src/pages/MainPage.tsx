@@ -9,5 +9,5 @@ export const MainPage = () => {
       <Table />
       <Footer />
     </main>
-  );
+  )
 };

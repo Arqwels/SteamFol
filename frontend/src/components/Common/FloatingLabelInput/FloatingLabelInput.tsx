@@ -101,9 +101,9 @@ export const FloatingLabelInput: FC<FloatingLabelInputProps> = ({
     <div className={styles.inputContainer}>
       <input 
         id={id}
-        type="text"
-        inputMode="decimal"
-        placeholder=" "
+        type='text'
+        inputMode='decimal'
+        placeholder=' '
         value={inputValue}
         className={styles.skinInput}
         style={style}
