@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './TableCell.module.scss';
 import { formatNumber } from '../../../utils/formatNumber';
+import { getChangeClass } from '../../../utils/getChangeClass';
 
 type TableCell_CurrentProfitProps = {
   price_item: number;
@@ -44,11 +45,10 @@ export const TableCell_CurrentProfit: React.FC<TableCell_CurrentProfitProps> = (
     commissionPercent
   );
 
-  // Условие для определения класса (если цена снизилась - применяем .loss, иначе .profit)
-  const priceChangeClass = profitValue < 0 ? styles.loss : styles.profit;
+  const cls = getChangeClass(profitValue);
 
   return (
-    <td className={`${styles.currentProfit} ${priceChangeClass}`}>
+    <td className={`${styles.currentProfit} ${styles[cls]}`}>
       <div style={{ display: 'flex', gap: '8px' }}>
         <span>{formatNumber(profitValue, { currency: currencyCode })}</span>
         <span>({formatNumber(netProfit, { currency: currencyCode })})</span>

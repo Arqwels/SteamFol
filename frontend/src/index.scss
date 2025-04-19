@@ -11,6 +11,7 @@
   --color-background-modal: #171717;
   --color-text: #F0F0F0;
   --color-loss: #D50E24;
+  --color-no-changes: #9E9E9E;
   --color-profit: #00BA00;
   --container-padding: 30px;
 }
@@ -25,7 +26,7 @@ html {
 
 body {
   font-family: 'Inter', sans-serif;
-  min-height: 100vh;
+  // min-height: 100vh;
   background-color: var(--color-background);
   color: var(--color-text);
 }
@@ -60,7 +61,7 @@ h1, h2, h3, p, figure, fieldset {
 }
 
 #root {
-  height: 100vh;
+  // height: 100vh;
   display: flex;
   flex-direction: column;
 }

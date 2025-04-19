@@ -6,11 +6,19 @@
   color: var(--color-loss);
 }
 
+.neutral {
+  color: var(--color-no-changes);
+}
+
 
 // TableCell_Object.tsx
 .object {
   > img {
     width: 50px;
+    padding: 4px;
+  }
+  > span {
+    margin-left: 5px;
   }
 }
 
