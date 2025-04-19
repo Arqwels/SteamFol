@@ -4,13 +4,14 @@ import FooterPlus from '../Svg/Footer/FooterPlus';
 import FooterGithub from '../Svg/Footer/FooterGithub';
 import FooterInfo from '../Svg/Footer/FooterInfo';
 import { AddSkin } from '../AddSkin/AddSkin';
+import { GITHUB_REPOSITORY_URL } from '../../utils/config';
 
 export const Footer = () => {
   const [modalActive, setModalActive] = useState(false);
 
   // Функция для открытия Github по нажати на кнопку
   const openGithub = () => {
-    window.open('https://github.com/Arqwels/SteamFol', '_blank');
+    window.open(GITHUB_REPOSITORY_URL, '_blank');
   }
 
   return (
