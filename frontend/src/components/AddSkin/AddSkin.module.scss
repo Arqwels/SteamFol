@@ -106,6 +106,13 @@
   width: 32px;
   height: 32px;
 
+  color: #FFF;
+
+  &:hover {
+    background: rgba(256, 256, 256, 0.3);
+    border-radius: 5px;
+  }
+
   svg {
     width: 100%;
   }
