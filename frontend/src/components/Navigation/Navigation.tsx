@@ -1,21 +1,57 @@
+import { useGetInvestmentsQuery } from '../../api/investmentApi';
+import { mockInvestments } from '../../mocks/mockInvestments';
+import { COMMISSION_RATE } from '../../utils/config';
+import { getChangeClass } from '../../utils/getChangeClass';
 import { NavSection } from './NavSection';
 import style from './Navigation.module.scss';
 
 export const Navigation = () => {
+  const { data, isLoading, error } = useGetInvestmentsQuery();
+  const investments = (!data || !!error) ? mockInvestments : data!;
+
+  // Рассчитываем общую сумму вложений (количество * цена покупки)
+  const totalInvested = investments.reduce(
+    (sum, inv) => sum + inv.countItems * inv.buyPrice,
+    0
+  );
+
+  // Рассчитываем текущую стоимость портфеля (количество * текущая цена скина)
+  const currentBalance = investments.reduce(
+    (sum, inv) => sum + inv.countItems * inv.skin.price_skin,
+    0
+  );
+
+  // Валовая прибыль без учёта комиссии
+  const grossProfit = currentBalance - totalInvested;
+
+  // Считаем комиссию площадки (примерно 13.04%) и сразу округляем до копеек
+  const commission = +(currentBalance * COMMISSION_RATE).toFixed(2);
+
+  // Чистая прибыль после вычета комиссии
+  const netProfit = grossProfit - commission;
+
+  // Класс для стилизации цвета прибыли/убытка/нейтрального
+  const profitClass = getChangeClass(netProfit);
+
   return (
     <div className={style.navigation}>
       <NavSection
-        money={0}
-        text={"Всего инвестировано"}
+        money={totalInvested}
+        text={'Всего инвестировано'}
+        isLoading={isLoading}
       />
       <NavSection 
-        money={0}
-        text={"Текущий баланс"}
+        money={currentBalance}
+        text={'Текущий баланс'}
+        isLoading={isLoading}
       />
       <NavSection 
-        money={0}
-        text={"Общая прибыль"}
+        money={netProfit}
+        //! При наведении показать пояснение, что расчёт прибыли учитывает комиссию
+        text={`Общая прибыль (−${(COMMISSION_RATE*100).toFixed(2)}%)`}
+        changeClass={profitClass}
+        isLoading={isLoading}
       />
     </div>
   )
-}
+};
