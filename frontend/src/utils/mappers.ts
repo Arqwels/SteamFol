@@ -11,6 +11,8 @@ import { TableData } from '../types/tableData';
 export function mapInvestmentToTableData(investment: Investment): TableData {
   return {
     id: investment.id,
+    idItem: investment.idItem,
+    dateBuyItem: investment.dateBuyItem,
     market_name: investment.skin.market_name,
     market_hash_name: investment.skin.market_hash_name,
     price_item: investment.skin.price_skin,
@@ -20,6 +22,6 @@ export function mapInvestmentToTableData(investment: Investment): TableData {
     image_url: investment.skin.image_url,
     count_items: investment.countItems,
     buy_price: investment.buyPrice,
-    currencyCode: investment.skin.currency_code,
+    currencyCode: investment.skin.currency_code
   };
 }
