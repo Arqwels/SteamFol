@@ -23,7 +23,6 @@
   }
 }
 
-
 tr {
   display: flex;
   align-items: center;
@@ -51,13 +50,39 @@ table > tbody > tr > td:first-child {
 }
 
 th:nth-child(3), td:nth-child(3) {
-  max-width: 140px; /* Задаём ширину для третьего столбца */
+  max-width: 140px;
 }
 
 th:nth-child(4), td:nth-child(4) {
-  max-width: 160px; /* Задаём ширину для третьего столбца */
+  max-width: 160px;
 }
 
 th:nth-child(5), td:nth-child(5) {
-  max-width: 140px; /* Задаём ширину для третьего столбца */
+  max-width: 140px;
+}
+
+/* Скелетон для лоудера */
+.skeletonShimmer {
+  position: relative;
+  background: #2b2b2b;
+  overflow: hidden;
+}
+
+.skeletonShimmer::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -150%;
+  width: 150%; height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,255,255,0.2) 50%,
+    transparent 100%
+  );
+  animation: shimmer 1.8s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(100%); }
 }
