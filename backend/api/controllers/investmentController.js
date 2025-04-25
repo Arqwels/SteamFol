@@ -34,7 +34,7 @@ class InvestmentController {
       });
 
       if (!investments || investments.length ===  0) {
-        return res.json('У вас нет инвестиций!');
+        return res.status(200).json([]);
       }
 
       return res.status(200).json(investments);
