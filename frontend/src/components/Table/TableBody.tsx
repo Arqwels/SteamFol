@@ -18,6 +18,19 @@ export const TableBody = () => {
     .map(mapInvestmentToTableData)
     .map(row => ({ ...row, isMock: usingMock }));
 
+  // Если массив пустой и нет ошибки, выводим сообщение об отсутствии инвестиций
+  if (!usingMock && investments.length === 0) {
+    return (
+      <tbody>
+        <tr>
+          <td colSpan={7} className={styles.emptyMessage}>
+            У вас нет инвестиций
+          </td>
+        </tr>
+      </tbody>
+    );
+  }
+
   if (isLoading) {
     return (
       <tbody>
