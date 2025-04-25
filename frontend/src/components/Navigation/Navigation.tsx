@@ -21,14 +21,7 @@ export const Navigation = () => {
     0
   );
 
-  // Валовая прибыль без учёта комиссии
-  const grossProfit = currentBalance - totalInvested;
-
-  // Считаем комиссию площадки (примерно 13.04%) и сразу округляем до копеек
-  const commission = +(currentBalance * COMMISSION_RATE).toFixed(2);
-
-  // Чистая прибыль после вычета комиссии
-  const netProfit = grossProfit - commission;
+  const netProfit = +(currentBalance - totalInvested - (currentBalance - totalInvested) * COMMISSION_RATE).toFixed(2);
 
   // Класс для стилизации цвета прибыли/убытка/нейтрального
   const profitClass = getChangeClass(netProfit);
