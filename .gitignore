@@ -9,6 +9,9 @@ logs
 dist/
 build/
 
+# TypeScript build-info
+*.tsbuildinfo
+
 # Env files
 .env
 **/.env
