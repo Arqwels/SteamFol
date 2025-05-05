@@ -7,4 +7,6 @@ router.use('/skins-data', require('./skinsDataRouter'));
 
 router.use('/investment', require('./investmentRouter'));
 
+router.use('/portfolio', require('./portfolioRouter'));
+
 module.exports = router;

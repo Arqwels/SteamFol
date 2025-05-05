@@ -9,23 +9,25 @@ const Invest = sequelize.define('invest', {
   },
   idItem: {
     type: DataTypes.INTEGER,
-    allowNull: true,
-    references: {
-      model: 'skins',
-      key: 'id'
-    }
+    allowNull: false,
+    references: { model: 'skins', key: 'id' }
+  },
+  portfolioId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: { model: 'portfolios', key: 'id' }
   },
   countItems: {
     type: DataTypes.FLOAT,
-    allowNull: true
+    allowNull: false
   },
   buyPrice: {
     type: DataTypes.FLOAT,
-    allowNull: true
+    allowNull: false
   },
   dateBuyItem: {
     type: DataTypes.DATE,
-    allowNull: true
+    allowNull: false
   },
 }, {
   timestamps: true,
