@@ -4,13 +4,15 @@ const cors = require('cors');
 const sequelize = require('./db');
 const apiRouter = require('./api/routes/index');
 const initAssociations = require('./api/models/associations');
+const cron = require('node-cron');
+const skinsDataController = require('./api/controllers/skinsDataController');
 
 const app = express();
 const PORT = process.env.PORT || 2000;
 
 app.use(express.json());
 app.use(cors({
-  origin: process.env.CLIENT_URL, // Укажите адрес вашего фронтенда
+  origin: process.env.CLIENT_URL,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
@@ -22,15 +24,15 @@ initAssociations();
 // Сделать запрос через node-cron
 
 // Запланировать выполнение задачи каждые 6 часов (в 0 минут каждого 6-го часа)
-// cron.schedule('0 */6 * * *', async () => {
-//   console.log('Запуск задачи: получение скинов и сохранение истории цен');
-//   try {
-//     await skinsDataController.fetchAndSaveSkins();
-//     console.log('Данные успешно обновлены.');
-//   } catch (error) {
-//     console.error("Ошибка при выполнении запланированной задачи:", error);
-//   }
-// });
+cron.schedule('0 */6 * * *', async () => {
+  console.log('Запуск задачи: получение скинов и сохранение истории цен');
+  try {
+    await skinsDataController.skinsData();
+    console.log('Данные успешно обновлены.');
+  } catch (error) {
+    console.error("Ошибка при выполнении запланированной задачи:", error);
+  }
+});
 
 const start = async () => {
   try {
