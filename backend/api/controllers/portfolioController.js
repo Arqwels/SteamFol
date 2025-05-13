@@ -20,7 +20,9 @@ class PortfolioController {
   async getAllPortfolios(req, res) {
     try {
       let portfolios = await Portfolio.findAll({
-        order: [['createdAt', 'DESC']]
+        order: [
+          ['id', 'ASC']
+        ]
       });
 
       // Если портфолио нет вовсе, создаём начальное
@@ -98,6 +100,58 @@ class PortfolioController {
     } catch (error) {
       console.error('Ошибка при активации портфолио:', error);
       return res.status(500).json({ message: 'Ошибка при активации портфолио!' });
+    }
+  };
+
+  async renamePortfolio(req, res) {
+    try {
+      const { id } = req.params;
+      const { namePortfolio } = req.body;
+
+      if (!namePortfolio) {
+        return res.status(400).json({ message: 'Новое название портфолио обязательно' });
+      }
+
+      const [updatedCount] = await Portfolio.update(
+        { namePortfolio },
+        { where: { id } }
+      );
+
+      if (!updatedCount) {
+        return res.status(404).json({ message: 'Портфолио не найдено' });
+      }
+
+      const updatedPortfolio = await Portfolio.findByPk(id);
+      return res.json(updatedPortfolio);
+    } catch (error) {
+      console.error('Ошибка при переименовании портфолио:', error);
+      return res.status(500).json({ message: 'Ошибка при переименовании портфолио!' });
+    }
+  };
+
+  async deletePortfolio(req, res) {
+    try {
+      const { id } = req.params;
+
+      const deletedCount = await Portfolio.destroy({ where: { id } });
+
+      if (!deletedCount) {
+        return res.status(404).json({ message: 'Портфолио не найдено' });
+      }
+
+      // Если удалили активное портфолио, можно автоматически активировать одно из оставшихся
+      const activeExists = await Portfolio.findOne({ where: { isActive: true } });
+      if (!activeExists) {
+        const next = await Portfolio.findOne({ order: [['createdAt', 'ASC']] });
+        if (next) {
+          await Portfolio.update({ isActive: true }, { where: { id: next.id } });
+        }
+      }
+
+      return res.json({ message: 'Портфолио успешно удалено' });
+    } catch (error) {
+      console.error('Ошибка при удалении портфолио:', error);
+      return res.status(500).json({ message: 'Ошибка при удалении портфолио!' });
     }
   };
 }
