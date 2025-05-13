@@ -7,7 +7,7 @@ const router = new Router();
 router.post('/', investmentController.additionInvestment);
 
 // Получение инвестиций
-// GET http://localhost:5000/api/investment
+// GET http://localhost:5000/api/investment?portfolioId=1
 router.get('/', investmentController.receivingInvestments);
 
 // Обновление инвестиции

@@ -24,13 +24,18 @@ class InvestmentController {
   // R - Получение инвестиций
   async receivingInvestments (req, res) {
     try {
+      const { portfolioId } = req.query;
+      const where = portfolioId
+        ? { portfolioId: Number(portfolioId) }
+        : {};
+
+      if (portfolioId && isNaN(Number(portfolioId))) {
+        return res.status(400).json({ message: 'Неверный портфель ID' });
+      }
+
       const investments = await Invest.findAll({
-        include: [
-          {
-            model: Skins,
-            as: 'skin'
-          }
-        ]
+        where,
+        include: [{ model: Skins, as: 'skin' }]
       });
 
       if (!investments || investments.length ===  0) {
