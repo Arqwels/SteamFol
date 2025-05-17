@@ -8,27 +8,33 @@
   flex-direction: column;
   position: relative;
 
-  box-sizing: border-box;
   border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid var(--color-border-input);
 }
 
 .addSkinInput {
   width: 100%;
   padding: 12px 18px;
 
-  background-color: var(--color-background-modal);
-  color: #FFF;
+  background-color: var(--color-background-input);
+  color: var(--color-text);
   font-family: var(--main-font);
   font-size: 16px;
 
   outline: none;
-  box-sizing: border-box;
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--color-border-input);
+
+  &::placeholder {
+    color: var(--color-input-label);
+  }
 
   &:focus {
-    border-color: #747474;
+    border-color: var(--color-border-input-focus);
+  }
+
+  &:read-only:focus {
+    border-color: var(--color-border-input);
   }
 }
 
@@ -45,29 +51,27 @@
 .wrapTotalSpent {
   position: relative;
   margin-top: 30px;
-}
-.noFocusOutline:focus {
-  outline: none;
-  box-shadow: none;
-  border-color: rgba(255, 255, 255, 0.1);
-}
-.labelTotalSpent {
-  position: absolute;
-  top: 12px;
-  left: 14px;
-  color: #999;
-  transition: 0.2s ease all;
-  pointer-events: none;
-  font-size: 14px;
-  padding-inline: 4px;
-}
-.labelFocused {
-  top: -10px;
-  left: 14px;
-  font-size: 12px;
-  color: #747474;
-  background-color: var(--color-background-modal);
-  z-index: 2;
+
+  input {
+    &:focus + .labelTotalSpent,
+    &:not(:placeholder-shown) + .labelTotalSpent {
+      top: -10px;
+      font-size: 12px;
+      background-color: var(--color-background-modal);
+      z-index: 2;
+    }
+  }
+
+  .labelTotalSpent {
+    position: absolute;
+    top: 12px;
+    left: 14px;
+    color: var(--color-input-label);
+    transition: 0.2s ease all;
+    pointer-events: none;
+    font-size: 16px;
+    padding-inline: 4px;
+  }
 }
 
 .addSkinBtn {
@@ -83,20 +87,26 @@
 
   transition: all 0.2s ease;
 
-  &:hover {
+  &:enabled:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(255, 255, 255, 0.25);
     background-color: #f8f8f8;
   }
 
-  &:active {
-    scale: 0.98;
+  &:enabled:active {
     transform: translateY(1px);
     box-shadow: none;
     background-color: #EEE;
+    scale: 0.98;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.77;
   }
 }
 
+/* Кнопка закрытия модального окна */
 .closeModal {
   position: absolute;
   cursor: pointer;
@@ -128,12 +138,14 @@
   width: 100%;
   max-height: 300px;
   overflow-y: auto;
+
   background: var(--color-background-modal);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--color-border-input);
   border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+
   margin-top: 8px;
   z-index: 1000;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
   top: 100%;
   left: 0;
 }
@@ -177,7 +189,6 @@
 .statusMessage {
   padding: 16px;
   text-align: center;
-  color: #999;
+  color: var(--color-text);
   font-size: 14px;
-  margin: 0;
 }

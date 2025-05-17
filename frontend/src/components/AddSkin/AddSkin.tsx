@@ -5,8 +5,9 @@ import { FloatingLabelInput } from '../Common/FloatingLabelInput/FloatingLabelIn
 import { Modal } from '../Modal/Modal';
 import { useSearchQuery } from '../../api/searchApi';
 import { useDebounce } from '../../hooks/useDebounce';
-import { Skin } from '../../types/skin';
+import { Skin } from '../../types';
 import { useCreateInvestmentMutation } from '../../api/investmentApi';
+import { useAppSelector } from '../../stores/hooks';
 
 interface AddSkinProps {
   active: boolean;
@@ -85,12 +86,15 @@ export const AddSkin = ({ active, setActive }: AddSkinProps) => {
     return searchQuery.trim() ? <p className={styles.statusMessage}>Ничего не найдено</p> : null;
   };
 
+  const portfolioId = useAppSelector(state => state.activePortfolio.portfolioId!);
+
   // Отправка формы
   const handleSubmit = async () => {
     // При отправле нужно посмотреть в БД и на сервере какие данные точно нужно отправить и написать interface
     if (selectedSkin && purchasePrice && countItems) {
       const newInvestment = {
         idItem: selectedSkin.id,
+        portfolioId: portfolioId,
         countItems,
         buyPrice: purchasePrice,
         dateBuyItem: new Date().toISOString(), // Можно заменить на пользовательскую дату
@@ -112,6 +116,7 @@ export const AddSkin = ({ active, setActive }: AddSkinProps) => {
         <div className={styles.searchBlock} ref={searchRef}>
           <div className={styles.inputContainer}>
             <input
+              name='searchSkins'
               type='text'
               placeholder='Поиск скинов...'
               className={styles.addSkinInput}
@@ -163,13 +168,12 @@ export const AddSkin = ({ active, setActive }: AddSkinProps) => {
             id='totalSpent'
             placeholder=' '
             value={totalSpent}
-            className={`${styles.addSkinInput} ${styles.noFocusOutline}`}
-            readOnly
-            tabIndex={-1}
+            className={styles.addSkinInput}
+            disabled
           />
           <label
             htmlFor='totalSpent'
-            className={`${styles.labelTotalSpent} ${totalSpent ? styles.labelFocused : ''}`}
+            className={styles.labelTotalSpent}
           >
             Всего потрачено
           </label>
