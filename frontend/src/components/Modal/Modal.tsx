@@ -21,6 +21,20 @@ export const Modal: FC<ModalProps> = ({ active, setActive, children }) => {
     }
   }, [active]);
 
+  // Блокировка скролла страницы
+  useEffect(() => {
+    if (active) {
+      const prevBodyOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+
+      return () => {
+        document.body.style.overflow = prevBodyOverflow;
+        document.documentElement.style.overflow = '';
+      };
+    }
+  }, [active]);
+
   // Обрабатываем Tab и Escape, а также восстанавливаем фокус при закрытии
   useEffect(() => {
     if (!active) {
