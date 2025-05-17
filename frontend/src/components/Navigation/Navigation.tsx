@@ -1,27 +1,40 @@
+import { skipToken } from '@reduxjs/toolkit/query';
 import { useGetInvestmentsQuery } from '../../api/investmentApi';
-import { mockInvestments } from '../../mocks/mockInvestments';
+import { mockInvestments } from '../../mocks/mockApiInvestments';
+import { useAppSelector } from '../../stores/hooks';
 import { COMMISSION_RATE } from '../../utils/config';
 import { getChangeClass } from '../../utils/getChangeClass';
 import { NavSection } from './NavSection';
 import style from './Navigation.module.scss';
+import { calcAssets, calcAssetsNet, calcCurrentProfitNet, calcInvest } from '../../utils/calculations';
 
 export const Navigation = () => {
-  const { data, isLoading, error } = useGetInvestmentsQuery();
+  const portfolioId = useAppSelector(state => state.activePortfolio.portfolioId);
+  const { data, isLoading, error } = useGetInvestmentsQuery(portfolioId ?? skipToken);
   const investments = (!data || !!error) ? mockInvestments : data!;
 
   // Рассчитываем общую сумму вложений (количество * цена покупки)
   const totalInvested = investments.reduce(
-    (sum, inv) => sum + inv.countItems * inv.buyPrice,
+    (sum, inv) => sum + calcInvest(inv.countItems, inv.buyPrice),
     0
   );
 
   // Рассчитываем текущую стоимость портфеля (количество * текущая цена скина)
   const currentBalance = investments.reduce(
-    (sum, inv) => sum + inv.countItems * inv.skin.price_skin,
+    (sum, inv) => sum + calcAssets(inv.skin.price_skin, inv.countItems),
     0
   );
 
-  const netProfit = +(currentBalance - totalInvested - (currentBalance - totalInvested) * COMMISSION_RATE).toFixed(2);
+  const netProfit = investments.reduce(
+    (sum, inv) => {
+      const invested = calcInvest(inv.countItems, inv.buyPrice);
+      const assets = calcAssets(inv.skin.price_skin, inv.countItems);
+      const assetsNet = calcAssetsNet(assets, COMMISSION_RATE);
+      const profitNet = calcCurrentProfitNet(assets, assetsNet, invested);
+      return sum + profitNet;
+    },
+    0
+  );
 
   // Класс для стилизации цвета прибыли/убытка/нейтрального
   const profitClass = getChangeClass(netProfit);
