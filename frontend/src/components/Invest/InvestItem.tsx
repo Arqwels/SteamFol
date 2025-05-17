@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useId, useState } from 'react';
 import { FaTag, FaSteam, FaSave } from 'react-icons/fa';
-import { TableData } from '../../types/tableData';
+import { TableData } from '../../types';
 import styles from './InvestItem.module.scss';
 import { Modal } from '../Modal/Modal';
 import PlusIcon from '../Svg/PlusIcon';
@@ -39,6 +39,8 @@ export const InvestItem = ({
     market_hash_name,
   } = data;
 
+  const idCount = useId();
+  const idBuyPrice = useId();
   const [countItems, setCountItems] = useState<number>(count_items);
   const [buyPrice, setBuyPrice] = useState<number>(buy_price);
 
@@ -94,13 +96,13 @@ export const InvestItem = ({
             <div className={styles.stats}>
               <div className={styles.stat}>
                 <span className={styles.statLabel}>Изм. цены 24ч, %</span>
-                <span className={`${styles.statValue} ${styles[cls]}`}>
+                <span className={`${styles.statValue} ${cls}`}>
                   {change_price_percent_24h.toFixed(2)}%
                 </span>
               </div>
               <div className={styles.stat}>
                 <span className={styles.statLabel}>Изм. прибыли 24ч</span>
-                <span className={`${styles.statValue} ${styles[cls]}`}>
+                <span className={`${styles.statValue} ${cls}`}>
                   {formatPrice(change_price_profit_24h)}
                 </span>
               </div>
@@ -116,7 +118,8 @@ export const InvestItem = ({
                   data-tooltip={isMock ? 'Нет соединения с сервером' : ''}
                 >
                   <input
-                    id='count'
+                    id={idCount}
+                    name='count'
                     type='number'
                     placeholder=' '
                     className={styles.inputField}
@@ -124,7 +127,7 @@ export const InvestItem = ({
                     onChange={changeCount}
                     disabled={isMock || isUpdating}
                   />
-                  <label htmlFor='count' className={styles.inputLabel}>Количество</label>
+                  <label htmlFor={idCount} className={styles.inputLabel}>Количество</label>
                 </div>
                 <div
                   className={styles.inputWrapper}
@@ -132,7 +135,8 @@ export const InvestItem = ({
                   data-tooltip={isMock ? 'Нет соединения с сервером' : ''}
                 >
                   <input
-                    id='buyPrice'
+                    id={idBuyPrice}
+                    name='buyPrice'
                     type='number'
                     placeholder=' '
                     className={styles.inputField}
@@ -140,7 +144,7 @@ export const InvestItem = ({
                     onChange={changeBuyPrice}
                     disabled={isMock || isUpdating}
                   />
-                  <label htmlFor='buyPrice' className={styles.inputLabel}>Цена покупки</label>
+                  <label htmlFor={idBuyPrice} className={styles.inputLabel}>Цена покупки</label>
                 </div>
               </div>
 
@@ -149,8 +153,6 @@ export const InvestItem = ({
                 <span className={styles.value}>{formatPrice(Number(buyPrice) * Number(countItems))}</span>
               </div>
             </div>
-
-            <hr className={styles.divider} />
           </section>
 
           <footer className={styles.actions}>
