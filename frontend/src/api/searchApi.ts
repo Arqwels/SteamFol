@@ -1,5 +1,5 @@
 import { baseApi } from './baseApi';
-import { Skin } from '../types/skin';
+import { Skin } from '../types';
 
 export const searchApi = baseApi.injectEndpoints({
   endpoints: build => ({

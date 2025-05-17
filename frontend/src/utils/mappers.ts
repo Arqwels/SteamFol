@@ -1,5 +1,4 @@
-import { Investment } from '../types/investment';
-import { TableData } from '../types/tableData';
+import { Investment, TableData } from '../types';
 
 /**
  * Функция преобразует объект Investment (структура ответа API)
