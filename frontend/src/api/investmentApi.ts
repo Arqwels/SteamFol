@@ -1,10 +1,10 @@
 import { baseApi } from './baseApi';
-import { CreateInvestmentRequest, Investment, UpdateInvestmentRequest } from '../types/investment';
+import { CreateInvestmentRequest, Investment, UpdateInvestmentRequest } from '../types';
 
 export const investmentApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getInvestments: builder.query<Investment[], void>({
-      query: () => '/investment',
+    getInvestments: builder.query<Investment[], number>({
+      query: (portfolioId) => `/investment?portfolioId=${portfolioId}`,
       providesTags: () => [
         {
           type: 'Investments',
