@@ -12,18 +12,10 @@ export const Footer = () => {
   // Функция для открытия Github по нажати на кнопку
   const openGithub = () => {
     window.open(GITHUB_REPOSITORY_URL, '_blank');
-  }
+  };
 
   return (
     <footer className={style.footer}>
-
-      {/* Ввывод увведомления реализовать тут */}
-      {/* <div className={style.notification}>
-        <p>Добро пожаловать, мой господин</p>
-        <button className={style.close}><img src="./symbols_close.svg" alt="close" /></button>
-      </div> */}
-
-      {/* Доделать что бы на кнопках был функционал */}
       <div className={style.buttons}>
         <button className={style.btn}>
           <FooterInfo />
@@ -41,5 +33,5 @@ export const Footer = () => {
 
       <AddSkin active={modalActive} setActive={setModalActive} />
     </footer>
-  );
+  )
 };
