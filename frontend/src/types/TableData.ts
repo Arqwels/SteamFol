@@ -11,4 +11,4 @@ export interface TableData {
   count_items: number;
   buy_price: number;
   currencyCode?: string;
-};
+}
