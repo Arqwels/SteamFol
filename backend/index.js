@@ -5,7 +5,7 @@ const sequelize = require('./db');
 const apiRouter = require('./api/routes/index');
 const initAssociations = require('./api/models/associations');
 const cron = require('node-cron');
-const skinsDataController = require('./api/controllers/skinsDataController');
+const { fetchAndSaveSkins } = require('./api/services/skinsTaskService');
 
 const app = express();
 const PORT = process.env.PORT || 2000;
@@ -27,7 +27,7 @@ initAssociations();
 cron.schedule('0 */6 * * *', async () => {
   console.log('Запуск задачи: получение скинов и сохранение истории цен');
   try {
-    await skinsDataController.skinsData();
+    await fetchAndSaveSkins();
     console.log('Данные успешно обновлены.');
   } catch (error) {
     console.error("Ошибка при выполнении запланированной задачи:", error);
