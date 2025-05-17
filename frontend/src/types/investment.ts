@@ -3,6 +3,7 @@ import { Skin } from './skin';
 export interface Investment {
   id: number;
   idItem: number;
+  portfolioId: number;
   countItems: number;
   buyPrice: number;
   dateBuyItem: string;
@@ -12,6 +13,7 @@ export interface Investment {
 
 export interface CreateInvestmentRequest {
   idItem: number;
+  portfolioId: number;
   countItems: number;
   buyPrice: number;
   dateBuyItem: string;
