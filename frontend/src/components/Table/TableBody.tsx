@@ -1,12 +1,15 @@
-import { TableData } from '../../types/tableData';
+import { TableData } from '../../types';
 import { TableRow } from './TableRow';
 import { useGetInvestmentsQuery } from '../../api/investmentApi';
 import { mapInvestmentToTableData } from '../../utils/mappers';
-import { mockInvestments } from '../../mocks/mockInvestments';
+import { mockInvestments } from '../../mocks/mockApiInvestments';
 import styles from './Table.module.scss';
+import { useAppSelector } from '../../stores/hooks';
+import { skipToken } from '@reduxjs/toolkit/query';
 
 export const TableBody = () => {
-  const { data, isLoading, error } = useGetInvestmentsQuery();
+  const portfolioId = useAppSelector(state => state.activePortfolio.portfolioId);
+  const { data, isLoading, error } = useGetInvestmentsQuery(portfolioId ?? skipToken);
 
   const usingMock = !data || !!error;
 
