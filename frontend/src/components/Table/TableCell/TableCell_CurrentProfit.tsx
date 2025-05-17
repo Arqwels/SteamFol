@@ -1,44 +1,42 @@
-import React from 'react';
 import styles from './TableCell.module.scss';
 import { formatNumber } from '../../../utils/formatNumber';
 import { getChangeClass } from '../../../utils/getChangeClass';
+import { calcAssets, calcAssetsNet, calcCurrentProfit, calcCurrentProfitNet, calcCurrentProfitPercent, calcInvest } from '../../../utils/calculations';
 import { COMMISSION_RATE } from '../../../utils/config';
-import { calculateInvestmentProfit } from '../../../utils/investmentCalculations';
 
 type TableCell_CurrentProfitProps = {
   price_item: number;
   buy_price: number;
   count_items: number;
-  commissionRate?: number;
   currencyCode?: string;
 };
 
-export const TableCell_CurrentProfit: React.FC<TableCell_CurrentProfitProps> = ({
+export const TableCell_CurrentProfit = ({
   price_item,
   buy_price,
   count_items,
-  commissionRate = COMMISSION_RATE,
   currencyCode
-}) => {
-  const { profitValue, profitPercent, netProfit } = calculateInvestmentProfit(
-    price_item,
-    buy_price,
-    count_items,
-    commissionRate
-  );
+}: TableCell_CurrentProfitProps) => {
+  const invest = calcInvest(count_items, buy_price);
+  const assets = calcAssets(price_item, count_items);
+  const assetsNet = calcAssetsNet(assets, COMMISSION_RATE);
 
-  const cls = getChangeClass(profitValue);
-  const netCls = getChangeClass(netProfit);
+  const currentProfit = calcCurrentProfit(assets, invest);
+  const currentProfitNet = calcCurrentProfitNet(assets, assetsNet, invest);
+  const currentProfitPercent = calcCurrentProfitPercent(currentProfit, invest);
+
+  const cls = getChangeClass(currentProfit);
+  const netCls = getChangeClass(currentProfitNet);
 
   return (
-    <td className={`${styles.currentProfit} ${styles[cls]}`}>
+    <td className={`${styles.currentProfit} ${cls}`}>
       <div style={{ display: 'flex', gap: '8px' }}>
-        <span>{formatNumber(profitValue, { currency: currencyCode })}</span>
-        <span className={styles[netCls]}>
-          ({formatNumber(netProfit, { currency: currencyCode })})
+        <span>{formatNumber(currentProfit, { currency: currencyCode })}</span>
+        <span className={netCls}>
+          ({formatNumber(currentProfitNet, { currency: currencyCode })})
         </span>
       </div>
-      <span>{profitPercent}%</span>
+      <span>{currentProfitPercent}%</span>
     </td>
   )
 };

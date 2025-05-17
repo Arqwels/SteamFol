@@ -1,29 +1,25 @@
-import React from 'react';
 import { formatNumber } from '../../../utils/formatNumber';
 import { COMMISSION_RATE } from '../../../utils/config';
+import { calcAssets, calcAssetsNet } from '../../../utils/calculations';
 
 type TableCell_HoldingsProps = {
   price_item: number;
   count_items: number;
-  commissionRate?: number; // Коэффициент комиссии (по умолчанию берётся из конфига, ≈0.1304)
   currencyCode?: string;
 };
 
-export const TableCell_Holdings: React.FC<TableCell_HoldingsProps> = ({ 
+export const TableCell_Holdings = ({ 
   price_item,
   count_items,
-  commissionRate = COMMISSION_RATE,
   currencyCode,
-}) => {
-  // Общая стоимость активов
-  const holdings: number = +(price_item * count_items).toFixed(2);
-  // Стоимость активов с учетом вычета комиссии
-  const holdingsNet: number = +(holdings * (1 - commissionRate)).toFixed(2);
+}: TableCell_HoldingsProps) => {
+  const assets = calcAssets(price_item, count_items);
+  const assetsNet = calcAssetsNet(assets, COMMISSION_RATE);
 
   return (
     <td style={{ gap: '8px' }}>
-      <span>{formatNumber(holdings, { currency: currencyCode })}</span>
-      <span>({formatNumber(holdingsNet, { currency: currencyCode })})</span>
+      <span>{formatNumber(assets, { currency: currencyCode })}</span>
+      <span>({formatNumber(assetsNet, { currency: currencyCode })})</span>
     </td>
   )
 };
