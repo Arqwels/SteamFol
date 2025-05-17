@@ -114,7 +114,7 @@ export const FloatingLabelInput: FC<FloatingLabelInputProps> = ({
       />
       <label 
         htmlFor={id} 
-        className={`${styles.label} ${focused || inputValue ? styles.labelFocused : ''}`}
+        className={`${styles.label}`}
       >
         {label}
       </label>

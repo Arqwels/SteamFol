@@ -4,47 +4,43 @@
 
 .label {
   position: absolute;
-  top: 13px;
+  top: 12px;
   left: 14px;
-  color: #999;
+  color: var(--color-input-label);
   transition: 0.2s ease all;
   pointer-events: none;
-  font-size: 14px;
-  z-index: 1;
-  background-color: #171717;
+  font-size: 16px;
   padding-inline: 4px;
 }
 
 .skinInput {
   width: 100%;
   padding: 12px 18px;
-  background-color: #171717;
-  color: #FFF;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  outline: none;
-  font-size: 16px;
   position: relative;
 
+  background-color: var(--color-background-input);
+  color: #FFF;
+
+  outline: none;
+  box-sizing: border-box;
+  border-radius: 10px;
+  border: 1px solid var(--color-border-input);
+  font-size: 16px;
+
   &:focus {
-    border-color: #747474;
+    border-color: var(--color-border-input-focus);
   }
 
   &:focus + .label,
   &:not(:placeholder-shown) + .label {
     top: -10px;
-    left: 14px;
     font-size: 12px;
-    color: #747474;
+    background-color: var(--color-background-modal);
     z-index: 2;
   }
 }
 
 
-
-
-
-/* Добавьте в FloatingLabelInput.module.scss */
 input[inputmode="numeric"] {
   -moz-appearance: textfield;
   &::-webkit-outer-spin-button,
@@ -54,8 +50,6 @@ input[inputmode="numeric"] {
   }
 }
 
-
-/* FloatingLabelInput.module.scss */
 .skinInput {
   /* Для правильного отображения запятой */
   font-family: inherit;
