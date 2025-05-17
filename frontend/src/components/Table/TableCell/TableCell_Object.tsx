@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from './TableCell.module.scss';
 
 type TableCell_ObjectProps = {
@@ -19,7 +18,11 @@ const truncateText = (text: string | null | undefined, maxLength: number, suffix
   return lastSpaceIndex > 0 ? truncated.slice(0, lastSpaceIndex) + suffix : truncated + suffix;
 };
 
-export const TableCell_Object: React.FC<TableCell_ObjectProps> = ({ image_url, item_hash_name, item_name }) => {
+export const TableCell_Object = ({
+  image_url,
+  item_hash_name,
+  item_name
+}: TableCell_ObjectProps) => {
   const truncateItemName = truncateText(item_name, 60);
 
   return (

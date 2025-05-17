@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from './TableCell.module.scss';
 import { formatNumber } from '../../../utils/formatNumber';
 import { getChangeClass } from '../../../utils/getChangeClass';
@@ -9,7 +8,11 @@ type TableCell_Price24hProps = {
   currencyCode?: string;
 };
 
-export const TableCell_Price24h: React.FC<TableCell_Price24hProps> = ({ price_item, change_price_percent_24h, currencyCode }) => {
+export const TableCell_Price24h = ({
+  price_item,
+  change_price_percent_24h,
+  currencyCode
+}: TableCell_Price24hProps) => {
   const cls = getChangeClass(change_price_percent_24h);
 
   return (

@@ -1,4 +1,3 @@
-import React from 'react';
 import { formatNumber } from '../../../utils/formatNumber';
 
 type TableCell_BuyPriceProps = {
@@ -6,7 +5,7 @@ type TableCell_BuyPriceProps = {
   currencyCode?: string;
 };
 
-export const TableCell_BuyPrice: React.FC<TableCell_BuyPriceProps> = ({ buy_price, currencyCode }) => {
+export const TableCell_BuyPrice = ({ buy_price, currencyCode }: TableCell_BuyPriceProps) => {
   return (
     <td>
       <span>{formatNumber(buy_price, { currency: currencyCode })}</span>
