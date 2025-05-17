@@ -6,17 +6,20 @@ import { TableCell_InvestmentsAndCount } from './TableCell/TableCell_Investments
 import { TableCell_BuyPrice } from './TableCell/TableCell_BuyPrice';
 import { TableCell_CurrentProfit } from './TableCell/TableCell_CurrentProfit';
 import { TableCell_Holdings } from './TableCell/TableCell_Holdings';
-import { TableData } from '../../types/tableData';
+import { TableData } from '../../types';
 import { InvestItem } from '../Invest/InvestItem';
 import { useDeleteInvestmentMutation, useUpdateInvestmentMutation } from '../../api/investmentApi';
+import { useAppSelector } from '../../stores/hooks';
 
 export const TableRow = ({ row, isMock }: { row: TableData & {isMock: boolean}, isMock: boolean }) => {
   const [modalActive, setModalActive] = useState(false);
+  const portfolioId = useAppSelector(state => state.activePortfolio.portfolioId!);
 
   // RTK Query мутации
   const [updateInvestment, { isLoading: isUpdating }] = useUpdateInvestmentMutation();
   const [deleteInvestment, { isLoading: isDeleting }] = useDeleteInvestmentMutation();
 
+  
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTableRowElement>) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
@@ -30,6 +33,7 @@ export const TableRow = ({ row, isMock }: { row: TableData & {isMock: boolean}, 
       await updateInvestment({
         id: row.id,
         idItem: row.idItem,
+        portfolioId: portfolioId,
         dateBuyItem: row.dateBuyItem,
         countItems,
         buyPrice,
@@ -41,6 +45,7 @@ export const TableRow = ({ row, isMock }: { row: TableData & {isMock: boolean}, 
   }
 
   // колбэк для «продажи» (удаления)
+  //! Написать логику по продаже инвестиций (Продумать всё)
   const handleSell = async () => {
     try {
       await deleteInvestment(row.id).unwrap();
