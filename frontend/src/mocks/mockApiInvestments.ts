@@ -1,9 +1,10 @@
-import { Investment } from '../types/investment';
+import { Investment } from '../types';
 
 export const mockInvestments: Investment[] = [
   {
     id: 0,
     idItem: 2882,
+    portfolioId: 0,
     countItems: 8,
     buyPrice: 1900,
     dateBuyItem: '2025-03-28T18:00:00.000Z',
@@ -21,6 +22,7 @@ export const mockInvestments: Investment[] = [
   {
     id: 1,
     idItem: 2883,
+    portfolioId: 0,
     countItems: 3,
     buyPrice: 1801.11,
     dateBuyItem: '2025-03-28T18:00:00.000Z',
@@ -38,6 +40,7 @@ export const mockInvestments: Investment[] = [
   {
     id: 2,
     idItem: 310802043,
+    portfolioId: 0,
     countItems: 32,
     buyPrice: 164.43,
     dateBuyItem: '2025-03-28T18:56:30.000Z',
@@ -55,6 +58,7 @@ export const mockInvestments: Investment[] = [
   {
     id: 3,
     idItem: 1934584393,
+    portfolioId: 0,
     countItems: 8,
     buyPrice: 764.96,
     dateBuyItem: '2025-03-28T18:56:30.000Z',
@@ -72,6 +76,7 @@ export const mockInvestments: Investment[] = [
   {
     id: 4,
     idItem: 1560437556,
+    portfolioId: 0,
     countItems: 12,
     buyPrice: 393.85,
     dateBuyItem: '2025-03-28T18:56:30.000Z',
