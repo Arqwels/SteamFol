@@ -18,4 +18,8 @@ router.put('/:id', investmentController.updateInvestment);
 // DELETE http://localhost:5000/api/investment/:id
 router.delete('/:id', investmentController.deleteInvestment);
 
+// Экспорт инвестиций в Excel (с фильтром по portfolioId)
+// GET http://localhost:5000/api/investment/export?portfolioId=1
+router.get('/export', investmentController.exportInvestments);
+
 module.exports = router;
