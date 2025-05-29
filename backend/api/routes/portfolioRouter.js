@@ -1,6 +1,6 @@
-const Router = require('express');
+const { Router } = require('express');
 const portfolioController = require('../controllers/portfolioController');
-const router = new Router();
+const router = Router();
 
 // Создание портфолио
 // POST http://localhost:5000/api/portfolio

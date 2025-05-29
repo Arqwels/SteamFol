@@ -1,6 +1,6 @@
-const Router = require('express');
+const { Router } = require('express');
 const investmentController = require('../controllers/investmentController');
-const router = new Router();
+const router = Router();
 
 // Создание инвестиции
 // POST http://localhost:5000/api/investment
