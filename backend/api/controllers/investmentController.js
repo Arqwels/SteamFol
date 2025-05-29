@@ -60,10 +60,6 @@ class InvestmentController {
         ],
       });
 
-      if (!investments || investments.length ===  0) {
-        return res.status(200).json([]);
-      }
-
       return res.status(200).json(investments);
     } catch (error) {
       console.error('Ошибка при получении инвестиций!', error);
