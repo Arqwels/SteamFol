@@ -23,9 +23,9 @@ class InvestmentController {
       res.status(201).json({ message: 'Инвестиция успешно создана.' });
     } catch (error) {
       console.error('Ошибка при добавлении инвестиций!', error);
-      res.status(500).json({ message: 'Ошибка при добавлении инвестиций!' });
+      return res.status(500).json({ message: 'Ошибка при добавлении инвестиций!' });
     }
-  };
+  }
 
   async receivingInvestments (req, res) {
     try {
@@ -67,9 +67,9 @@ class InvestmentController {
       return res.status(200).json(investments);
     } catch (error) {
       console.error('Ошибка при получении инвестиций!', error);
-      res.status(500).json({ message: 'Ошибка при получении инвестиций!' });
+      return res.status(500).json({ message: 'Ошибка при получении инвестиций!' });
     }
-  };
+  }
 
   async updateInvestment (req, res) {
     try {
@@ -87,9 +87,9 @@ class InvestmentController {
       return res.status(200).json({ message: 'Инвестиция успешно обновлена!' });
     } catch (error) {
       console.error('Ошибка при обновлении инвестиции!', error);
-      res.status(500).json({ message: 'Ошибка при обновлении инвестиции!' });
+      return res.status(500).json({ message: 'Ошибка при обновлении инвестиции!' });
     }
-  };
+  }
 
   async deleteInvestment (req, res) {
     try {
@@ -107,9 +107,9 @@ class InvestmentController {
       return res.status(200).json({ message: 'Инвестиция успешно удалена!' });
     } catch (error) {
       console.error('Ошибка при удалении инвестиции!', error);
-      res.status(500).json({ message: 'Ошибка при удалении инвестиции!' });
+      return res.status(500).json({ message: 'Ошибка при удалении инвестиции!' });
     }
-  };
+  }
 
   async exportInvestments (req, res) {
     try {
@@ -182,9 +182,9 @@ class InvestmentController {
       res.end();
     } catch (error) {
       console.error('Ошибка при экспорте инвестиций!', error);
-      res.status(500).json({ message: 'Ошибка при экспорте инвестиций!' });
+      return res.status(500).json({ message: 'Ошибка при экспорте инвестиций!' });
     }
-  };
+  }
 }
 
 module.exports = new InvestmentController();
