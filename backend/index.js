@@ -6,17 +6,22 @@ const apiRouter = require('./api/routes/index');
 const initAssociations = require('./api/models/associations');
 const cron = require('node-cron');
 const { fetchAndSaveSkins } = require('./api/services/skinsTaskService');
+const cookieParser = require('cookie-parser');
+const errorMiddleware = require('./api/middlewares/errorMiddleware');
 
 const app = express();
 const PORT = process.env.PORT || 2000;
 
 app.use(express.json());
+app.use(cookieParser());
 app.use(cors({
   origin: process.env.CLIENT_URL,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
 }));
 app.use('/api', apiRouter);
+app.use(errorMiddleware);
 
 // Импорт моделей и ассоциаций
 initAssociations();
