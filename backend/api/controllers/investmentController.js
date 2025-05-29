@@ -1,42 +1,63 @@
 const ExcelJS = require('exceljs');
-const { Invest, Skins } = require("../models");
+const { Invest, Skins, Portfolio } = require("../models");
 
 class InvestmentController {
-  // C - Создание инвестиции
   async additionInvestment (req, res) {
     try {
-      const skin = req.body;
+      const userId = req.user.id;
+      const { portfolioId, idItem, countItems, buyPrice, dateBuyItem } = req.body;
 
-      const existingSkin = await Skins.findByPk(skin.idItem);
+      // проверка владения портфелем
+      const portfolio = await Portfolio.findOne({ where: { id: portfolioId, userId } });
+      if (!portfolio) {
+        return res.status(403).json({ message: 'Нет доступа к этому портфелю' });
+      }
+
+      // проверка существования скина
+      const existingSkin = await Skins.findByPk(idItem);
       if (!existingSkin) {
         return res.status(400).json({ message: 'Записи с таким idItem не существует!' });
       }
 
-      //! может что то потом придумаю ещё
-      // const addSkin = await Invest.create(skin);
-      await Invest.create(skin);
-
+      await Invest.create({ portfolioId, idItem, countItems, buyPrice, dateBuyItem });
       res.status(201).json({ message: 'Инвестиция успешно создана.' });
     } catch (error) {
       console.error('Ошибка при добавлении инвестиций!', error);
       res.status(500).json({ message: 'Ошибка при добавлении инвестиций!' });
     }
   };
-  // R - Получение инвестиций
+
   async receivingInvestments (req, res) {
     try {
+      const userId = req.user.id;
       const { portfolioId } = req.query;
-      const where = portfolioId
-        ? { portfolioId: Number(portfolioId) }
-        : {};
+      const pid = portfolioId ? Number(portfolioId) : null;
 
-      if (portfolioId && isNaN(Number(portfolioId))) {
+      if (portfolioId && isNaN(pid)) {
         return res.status(400).json({ message: 'Неверный портфель ID' });
       }
 
+      if (pid) {
+        const ok = await Portfolio.findOne({ where: { id: pid, userId } });
+        if (!ok) {
+          return res.status(403).json({ message: 'Нет доступа к этому портфелю' });
+        }
+      }
+
       const investments = await Invest.findAll({
-        where,
-        include: [{ model: Skins, as: 'skin' }]
+        where: pid ? { portfolioId: pid } : {},
+        include: [
+          {
+            model: Portfolio,
+            as: 'portfolio',
+            where: { userId },
+            attributes: ['id', 'namePortfolio']
+          },
+          {
+            model: Skins,
+            as: 'skin'
+          },
+        ],
       });
 
       if (!investments || investments.length ===  0) {
@@ -49,11 +70,14 @@ class InvestmentController {
       res.status(500).json({ message: 'Ошибка при получении инвестиций!' });
     }
   };
-  // U - Обновление инвестиции
+
   async updateInvestment (req, res) {
     try {
+      const userId = req.user.id;
       const investmentId = req.params.id;
-      const investment = await Invest.findByPk(investmentId);
+      const investment = await Invest.findByPk(investmentId, {
+        include: [{ model: Portfolio, as: 'portfolio', where: { userId } }]
+      });
 
       if (!investment) {
         return res.status(404).json({ message: 'Инвестиция не найдена!' });
@@ -66,11 +90,14 @@ class InvestmentController {
       res.status(500).json({ message: 'Ошибка при обновлении инвестиции!' });
     }
   };
-  // D - Удаление инвестиции
+
   async deleteInvestment (req, res) {
     try {
+      const userId = req.user.id;
       const investmentId = req.params.id;
-      const investment = await Invest.findByPk(investmentId);
+      const investment = await Invest.findByPk(investmentId, {
+        include: [{ model: Portfolio, as: 'portfolio', where: { userId } }]
+      });
 
       if (!investment) {
         return res.status(404).json({ message: 'Инвестиция не найдена!' });
@@ -86,12 +113,31 @@ class InvestmentController {
 
   async exportInvestments (req, res) {
     try {
-      const portfolioId = req.query.portfolioId;
-      const where = portfolioId ? { portfolioId: Number(portfolioId) } : {};
+      const userId = req.user.id;
+      const { portfolioId } = req.query;
+      const pid = portfolioId ? Number(portfolioId) : null;
+      if (portfolioId && isNaN(pid)) {
+        return res.status(400).json({ message: 'Неверный портфель ID' });
+      }
+
+      if (pid) {
+        const ok = await Portfolio.findOne({ where: { id: pid, userId } });
+        if (!ok) {
+          return res.status(403).json({ message: 'Нет доступа к этому портфелю' });
+        }
+      }
 
       const investments = await Invest.findAll({
-        where,
-        include: [{ model: Skins, as: 'skin' }],
+        where: pid ? { portfolioId: pid } : {},
+        include: [
+          {
+            model: Portfolio,
+            as: 'portfolio',
+            where: { userId },
+            attributes: []
+          },
+          { model: Skins, as: 'skin' }
+        ],
         order: [['dateBuyItem', 'ASC']],
         raw: true,
         nest: true
@@ -122,9 +168,7 @@ class InvestmentController {
           dateBuyItem: new Date(inv.dateBuyItem).toISOString().split('T')[0],
           'skin.market_name': inv.skin.market_name,
           'skin.price_skin': inv.skin.price_skin,
-          'skin.date_update': inv.skin.date_update
-            ? new Date(inv.skin.date_update).toISOString().split('T')[0]
-            : ''
+          'skin.date_update': inv.skin.date_update ? new Date(inv.skin.date_update).toISOString().split('T')[0] : '',
         });
       });
 
