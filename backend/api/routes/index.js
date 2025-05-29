@@ -1,12 +1,15 @@
 const { Router } = require('express');
-const router = new Router();
+const router = Router();
+const authMiddleware = require('../middlewares/authMiddleware');
 
-router.use('/skins', require('./skinsRouter'));
+router.use('/skins', authMiddleware, require('./skinsRouter'));
 
 router.use('/skins-data', require('./skinsDataRouter'));
 
-router.use('/investment', require('./investmentRouter'));
+router.use('/investment', authMiddleware, require('./investmentRouter'));
 
-router.use('/portfolio', require('./portfolioRouter'));
+router.use('/portfolio', authMiddleware, require('./portfolioRouter'));
+
+router.use('/auth', require('./authRouter'));
 
 module.exports = router;
