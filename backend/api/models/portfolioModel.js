@@ -21,6 +21,11 @@ const Portfolio = sequelize.define('portfolio', {
     allowNull: false,
     defaultValue: false
   },
+  userId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: { model: 'users', key: 'id' },
+  },
 }, {
   tableName: 'portfolios',
   timestamps: true,
