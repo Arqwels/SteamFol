@@ -1,4 +1,6 @@
 const { Invest, Skins, SkinPriceHistory, Portfolio } = require('./');
+const Token = require('./tokenModel');
+const User = require('./userModel');
 
 const initAssociations = () => {
   // Invest <-> Skins
@@ -37,6 +39,31 @@ const initAssociations = () => {
   Skins.hasMany(SkinPriceHistory, {
     foreignKey: 'skinId',
     as: 'priceHistory'
+  });
+
+  // User <-> Token
+  Token.belongsTo(User, {
+    foreignKey: 'userId',
+    targetKey: 'id',
+    as: 'user',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
+  });
+  User.hasMany(Token, {
+    foreignKey: 'userId',
+    as: 'tokens'
+  });
+
+  // Пользователь <-> Портфели
+  User.hasMany(Portfolio, {
+    foreignKey: 'userId',
+    as: 'portfolios'
+  });
+  Portfolio.belongsTo(User, {
+    foreignKey: 'userId',
+    as: 'user',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
   });
 };
 
