@@ -54,9 +54,11 @@ class SteamService {
   async fetchAllSkins(limit = null) {
     console.log(`[SteamService] Запуск fetchAllSkins с лимитом=${limit}`);
 
-    const defaultCount = 100;
+    const defaultCount = 10;
     let start = 0;
     let all = [];
+    let consecutiveEmptyBatches = 0;
+    const maxEmptyBatches = 10;
 
     while (true) {
       const batchSize = limit ? Math.min(defaultCount, limit - all.length) : defaultCount;
@@ -65,7 +67,6 @@ class SteamService {
       let emptyRetries = 0;
       let data;
 
-      // пробуем запрашивать этот блок до 5 раз, пока не получим непустой results
       while (emptyRetries < 5) {
         try {
           ({ data } = await this.fetchSkinsBatch(start, batchSize));
@@ -77,7 +78,7 @@ class SteamService {
         }
 
         if (data.results && data.results.length) {
-          break; // получили данные — выходим из retry-петли
+          break;
         }
 
         console.log(`[SteamService] Пустой батч на start=${start}, retry ${emptyRetries + 1}/5`);
@@ -85,12 +86,20 @@ class SteamService {
         await new Promise(res => setTimeout(res, 2000));
       }
 
-      // если после всех попыток всё ещё пусто — выходим
       if (!data || !data.results?.length) {
-        console.log(`[SteamService] После ${emptyRetries} попыток батч пуст, пропускаем start=${start}`);
+        consecutiveEmptyBatches++;
+        console.log(`[SteamService] После ${emptyRetries} попыток батч пуст. Пустых батчей подряд: ${consecutiveEmptyBatches}/${maxEmptyBatches}`);
+
+        if (consecutiveEmptyBatches >= maxEmptyBatches) {
+          console.log(`[SteamService] Достигнут лимит пустых батчей подряд (${maxEmptyBatches}). Завершаем.`);
+          break;
+        }
+
         start += defaultCount;
         continue;
       }
+
+      consecutiveEmptyBatches = 0;
 
       const totalCount = limit ? Math.min(data.total_count, limit) : data.total_count;
       all.push(...data.results);

@@ -3,7 +3,9 @@ module.exports = {
     appid: 730, // Игра ( 730 = CS GO, 570 = Dota 2)
     norender: 1, // Значения рендеринга
     start: 21000, // С какого значения будет поиск
-    count: 100 // Количество получаемых результатов
+    count: 100, // Количество получаемых результатов
+    sort_column: 'price',
+    sort_dir: 'asc',
   },
   priceParams: {
     currency: 5, // 5 = Рубли
