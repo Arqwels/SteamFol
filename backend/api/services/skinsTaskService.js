@@ -14,11 +14,11 @@ async function fetchAndSaveSkins(limit = null) {
   const unique = [...new Map(raw.map(item => [item.hash_name, item])).values()];
 
   // Записываем или обновляем скины в БД
-  const dbSkins = await skinsService.upsertSkins(unique);
+  const dbSkins = await skinsService.upsertSkins(raw);
   // Фиксируем историю цен
-  await priceHistoryService.recordHistory(dbSkins, unique);
+  await priceHistoryService.recordHistory(dbSkins, raw);
 
-  return unique;
+  return raw;
 }
 
 module.exports = { fetchAndSaveSkins };
