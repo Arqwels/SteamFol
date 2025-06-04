@@ -7,16 +7,24 @@
 
 :root {
   --main-font: 'Inter', sans-serif;
+
   --color-background: #2E2E2E;
   --color-background-modal: #292929;
   --color-background-input: #242424;
+
   --color-border-input: #555;
   --color-border-input-focus: #bebebe;
+  --color-input-label: #AAA;
+
   --color-text: #F0F0F0;
-  --color-input-label: #aaa;
+  --color-error-text: #ef454a;
+
   --color-loss: #D50E24;
   --color-no-changes: #9E9E9E;
   --color-profit: #00BA00;
+
+  --btn-primary: #0F9D58;
+  --btn-secondary: #757575;
 }
 
 *,
@@ -98,4 +106,11 @@ footer {
 }
 .neutral {
   color: var(--color-no-changes);
+}
+
+// Стили для h1 в LoginPage & RegisterPage
+.page-auth__title {
+  font: 700 32px var(--main-font);
+  color: var(--color-text);
+  text-align: center;
 }
