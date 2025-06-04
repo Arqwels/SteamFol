@@ -8,8 +8,9 @@ import { useAppDispatch, useAppSelector } from '../stores/hooks';
 import { setActivePortfolio } from '../stores/reducers/activePortfolioSlice';
 import { Loader } from '../components/Loader/Loader';
 import { PortfolioModal } from '../components/PortfolioModal/PortfolioModal';
+import { Header } from '../components/Header/Header';
 
-export const MainPage = () => {
+export const PortfolioPage = () => {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const dispatch = useAppDispatch();
   const activeId = useAppSelector(state => state.activePortfolio.portfolioId);
@@ -62,6 +63,7 @@ export const MainPage = () => {
   if (isLoadingAll) return <Loader />;
   return (
     <main className='container'>
+      <Header />
       <Navigation />
       <PortfolioHeader
         portfolios={portfolios ?? []}
