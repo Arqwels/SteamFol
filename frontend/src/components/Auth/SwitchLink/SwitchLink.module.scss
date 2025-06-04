@@ -1,0 +1,13 @@
+.switch {
+  text-align: center;
+  font: 400 14px var(--main-font);
+  color: var(--color-text);
+}
+
+.link {
+  font-weight: 500;
+  color: var(--btn-primary);
+  &:hover {
+    text-decoration: underline;
+  }
+}
