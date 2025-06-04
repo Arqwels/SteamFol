@@ -1,0 +1,47 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  color: var(--color-text);
+  border-bottom: 1px solid var(--color-input-label);
+}
+
+.title {
+  font: 700 24px var(--main-font);
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.btn {
+  padding: 8px 16px;
+  font: 500 14px var(--main-font);
+  border: none;
+  border-radius: 4px;
+  color: var(--color-text);
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    box-shadow 0.2s,
+    filter 0.2s,
+    transform 0.1s;
+}
+
+.btnLogout {
+  background-color: var(--color-loss);
+
+  &:hover {
+    filter: brightness(0.9);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  &:active {
+    transform: scale(0.96);
+    filter: brightness(0.75);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+  }
+}
