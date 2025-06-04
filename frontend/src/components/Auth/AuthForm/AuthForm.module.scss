@@ -1,0 +1,57 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.btn {
+  padding: 14px;
+  margin-top: 12px;
+  font: 500 16px var(--main-font);
+  color: var(--color-text);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition:
+    filter 0.2s,
+    transform 0.1s;
+
+  &:not(:disabled) {
+    &:active {
+      transform: scale(0.97);
+      filter: brightness(0.8);
+    }
+    &:hover {
+      filter: brightness(0.9);
+    }
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+.btn-secondary {
+  background-color: var(--btn-secondary);
+}
+
+.btn-primary {
+  background-color: var(--btn-primary);
+}
+
+.extra {
+  text-align: right;
+}
+
+.forgotLink {
+  font-size: 14px;
+  color: var(--btn-primary);
+  text-decoration: none;
+  transition: color 0.2s;
+
+  &:hover {
+    filter: brightness(0.9);
+    text-decoration: underline;
+  }
+}
