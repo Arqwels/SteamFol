@@ -10,7 +10,6 @@ interface InvestItemProps {
   data: TableData;
   active: boolean;
   setActive: (active: boolean) => void;
-  isMock?: boolean;
   isUpdating?: boolean;
   isDeleting?: boolean;
   onSaveChanges?: (countItems: number, buyPrice: number) => void;
@@ -21,7 +20,6 @@ export const InvestItem = ({
   data,
   active,
   setActive,
-  isMock = false,
   isUpdating = false,
   isDeleting = false,
   onSaveChanges,
@@ -53,13 +51,12 @@ export const InvestItem = ({
 
   const changeBuyPrice = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-
     setBuyPrice(+value);
   };
 
   const formatPrice = (price: number) => {
     const formatted = price.toFixed(2).replace(/\.?0+$/, '');
-    return `${formatted} ${currencyCode || 'RUB'}`
+    return `${formatted} ${currencyCode || 'RUB'}`;
   };
 
   useEffect(() => {
@@ -112,11 +109,7 @@ export const InvestItem = ({
 
             <div className={styles.info}>
               <div className={styles.infoGroup}>
-                <div
-                  className={styles.inputWrapper}
-                  data-disabled={isMock}
-                  data-tooltip={isMock ? 'Нет соединения с сервером' : ''}
-                >
+                <div className={styles.inputWrapper}>
                   <input
                     id={idCount}
                     name='count'
@@ -125,15 +118,11 @@ export const InvestItem = ({
                     className={styles.inputField}
                     value={countItems}
                     onChange={changeCount}
-                    disabled={isMock || isUpdating}
+                    disabled={isUpdating}
                   />
                   <label htmlFor={idCount} className={styles.inputLabel}>Количество</label>
                 </div>
-                <div
-                  className={styles.inputWrapper}
-                  data-disabled={isMock}
-                  data-tooltip={isMock ? 'Нет соединения с сервером' : ''}
-                >
+                <div className={styles.inputWrapper}>
                   <input
                     id={idBuyPrice}
                     name='buyPrice'
@@ -142,7 +131,7 @@ export const InvestItem = ({
                     className={styles.inputField}
                     value={buyPrice}
                     onChange={changeBuyPrice}
-                    disabled={isMock || isUpdating}
+                    disabled={isUpdating}
                   />
                   <label htmlFor={idBuyPrice} className={styles.inputLabel}>Цена покупки</label>
                 </div>
@@ -159,7 +148,7 @@ export const InvestItem = ({
             <button
               onClick={() => onSaveChanges?.(countItems, buyPrice)}
               className={`${styles.button} ${styles.saveButton}`}
-              disabled={isMock || isUpdating}
+              disabled={isUpdating}
             >
               {isUpdating ? 'Сохраняем...' : <><FaSave /> Сохранить</>}
             </button>
@@ -176,7 +165,7 @@ export const InvestItem = ({
             <button
               onClick={() => onSell?.()}
               className={`${styles.button} ${styles.sellButton}`}
-              disabled={isMock || isDeleting}
+              disabled={isDeleting}
             >
               {isDeleting ? 'Продажа...' : <><FaTag /> Продать</>}
             </button>
@@ -188,5 +177,5 @@ export const InvestItem = ({
         </div>
       </div>
     </Modal>
-  )
+  );
 };

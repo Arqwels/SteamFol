@@ -86,3 +86,39 @@ th:nth-child(5), td:nth-child(5) {
   0% { transform: translateX(0); }
   100% { transform: translateX(100%); }
 }
+
+.emptyWrapper {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+}
+
+.emptyScreen {
+  text-align: center;
+  padding: 20px;
+  max-width: 70%;
+  color: var(--color-text);
+}
+
+.downArrow {
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-top: 12px solid #FFF;
+  margin-top: 12px;
+}
+
+@keyframes bounceDown {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+
+.downArrow {
+  animation: bounceDown 1.2s infinite;
+}

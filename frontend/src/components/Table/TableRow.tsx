@@ -11,7 +11,7 @@ import { InvestItem } from '../Invest/InvestItem';
 import { useDeleteInvestmentMutation, useUpdateInvestmentMutation } from '../../api/investmentApi';
 import { useAppSelector } from '../../stores/hooks';
 
-export const TableRow = ({ row, isMock }: { row: TableData & {isMock: boolean}, isMock: boolean }) => {
+export const TableRow = ({ row }: { row: TableData }) => {
   const [modalActive, setModalActive] = useState(false);
   const portfolioId = useAppSelector(state => state.activePortfolio.portfolioId!);
 
@@ -103,7 +103,6 @@ export const TableRow = ({ row, isMock }: { row: TableData & {isMock: boolean}, 
         data={row}
         active={modalActive}
         setActive={setModalActive}
-        isMock={isMock}
         isUpdating={isUpdating}
         isDeleting={isDeleting}
         onSaveChanges={handleSave}
