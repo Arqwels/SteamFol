@@ -1,4 +1,4 @@
-const { Portfolio, Invest, Skins, sequelize } = require("../models");
+const { Portfolio, Invest, Skins, sequelize } = require('../models');
 
 class PortfolioController {
   async createPortfolio (req, res) {

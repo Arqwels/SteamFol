@@ -1,5 +1,7 @@
 const ExcelJS = require('exceljs');
-const { Invest, Skins, Portfolio } = require("../models");
+const { Invest, Skins, Portfolio } = require('../models');
+const ApiError = require('../exceptions/apiError');
+const { validationResult } = require('express-validator');
 
 class InvestmentController {
   async additionInvestment (req, res) {
@@ -67,10 +69,16 @@ class InvestmentController {
     }
   }
 
-  async updateInvestment (req, res) {
+  async updateInvestment (req, res, next) {
     try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return next(ApiError.BadRequest('Ошибка при валидации', errors.array()));
+      }
+
       const userId = req.user.id;
       const investmentId = req.params.id;
+
       const investment = await Invest.findByPk(investmentId, {
         include: [{ model: Portfolio, as: 'portfolio', where: { userId } }]
       });
@@ -79,10 +87,13 @@ class InvestmentController {
         return res.status(404).json({ message: 'Инвестиция не найдена!' });
       }
 
-      await investment.update(req.body);
+      // Обновляем только проверенные поля
+      const { countItems, buyPrice } = req.body;
+      await investment.update({ countItems, buyPrice });
+
       return res.status(200).json({ message: 'Инвестиция успешно обновлена!' });
     } catch (error) {
-      console.error('Ошибка при обновлении инвестиции!', error);
+      console.error(`Ошибка при обновлении инвестиции ${req.params.id}:`, error);
       return res.status(500).json({ message: 'Ошибка при обновлении инвестиции!' });
     }
   }

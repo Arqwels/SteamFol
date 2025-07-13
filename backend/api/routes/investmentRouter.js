@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const investmentController = require('../controllers/investmentController');
 const router = Router();
+const { body } = require('express-validator');
 
 // Создание инвестиции
 // POST http://localhost:5000/api/investment
@@ -12,7 +13,16 @@ router.get('/', investmentController.receivingInvestments);
 
 // Обновление инвестиции
 // PUT http://localhost:5000/api/investment/:id
-router.put('/:id', investmentController.updateInvestment);
+router.put(
+  '/:id',
+  body('countItems')
+    .isInt({ min: 1 })
+    .withMessage('Количество предметов не может быть меньше 1'),
+  body('buyPrice')
+    .isFloat({ min: 0.01 })
+    .withMessage('Цена покупки не может быть ниже 0,01'),
+  investmentController.updateInvestment
+);
 
 // Удаление инвестиции
 // DELETE http://localhost:5000/api/investment/:id
