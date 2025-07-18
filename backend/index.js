@@ -29,15 +29,15 @@ initAssociations();
 // Сделать запрос через node-cron
 
 // Запланировать выполнение задачи каждые 6 часов (в 0 минут каждого 6-го часа)
-cron.schedule('0 */6 * * *', async () => {
-  console.log('Запуск задачи: получение скинов и сохранение истории цен');
-  try {
-    await fetchAndSaveSkins();
-    console.log('Данные успешно обновлены.');
-  } catch (error) {
-    console.error("Ошибка при выполнении запланированной задачи:", error);
-  }
-});
+// cron.schedule('0 */6 * * *', async () => {
+//   console.log('Запуск задачи: получение скинов и сохранение истории цен');
+//   try {
+//     await fetchAndSaveSkins();
+//     console.log('Данные успешно обновлены.');
+//   } catch (error) {
+//     console.error("Ошибка при выполнении запланированной задачи:", error);
+//   }
+// });
 
 const start = async () => {
   try {
