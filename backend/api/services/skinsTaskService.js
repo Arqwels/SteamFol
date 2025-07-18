@@ -10,15 +10,17 @@ async function fetchAndSaveSkins(limit = null) {
 
   // Получаем сырые данные
   const raw = await steamService.fetchAllSkins(limit);
+
   // Убираем дубликаты по hash_name
   const unique = [...new Map(raw.map(item => [item.hash_name, item])).values()];
 
   // Записываем или обновляем скины в БД
-  const dbSkins = await skinsService.upsertSkins(raw);
-  // Фиксируем историю цен
-  await priceHistoryService.recordHistory(dbSkins, raw);
+  const dbSkins = await skinsService.upsertSkins(unique);
 
-  return raw;
+  // Фиксируем историю цен
+  await priceHistoryService.recordHistory(dbSkins, unique);
+
+  return unique;
 }
 
 module.exports = { fetchAndSaveSkins };
