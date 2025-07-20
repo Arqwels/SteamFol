@@ -2,6 +2,7 @@ const { QueryTypes } = require('sequelize');
 const sequelize = require('../../../db');
 const SkinPriceHistory = require('../../models/skinPriceHistory');
 const Skins = require('../../models/skinsModel');
+const { fetchAndSaveSkins } = require('../../services/skinsTaskService');
 
 class SkinsController {
   constructor() {
