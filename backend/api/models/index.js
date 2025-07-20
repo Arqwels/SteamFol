@@ -1,7 +1,7 @@
 const sequelize = require('../../db');
 const Invest = require('./investModel');
 const Portfolio = require('./portfolioModel');
-const SkinPriceHistory = require('./SkinPriceHistory');
+const SkinPriceHistory = require('./skinPriceHistory');
 const Skins = require('./skinsModel');
 
 module.exports = {
