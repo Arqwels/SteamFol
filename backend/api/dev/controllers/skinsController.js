@@ -1,6 +1,6 @@
 const { QueryTypes } = require('sequelize');
 const sequelize = require('../../../db');
-const SkinPriceHistory = require('../../models/SkinPriceHistory');
+const SkinPriceHistory = require('../../models/skinPriceHistory');
 const Skins = require('../../models/skinsModel');
 
 class SkinsController {
