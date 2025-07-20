@@ -1,4 +1,4 @@
-const SkinPriceHistory = require('../models/SkinPriceHistory');
+const SkinPriceHistory = require('../models/skinPriceHistory');
 const { chunkArray } = require('../utils/chunk');
 
 class PriceHistoryService {
