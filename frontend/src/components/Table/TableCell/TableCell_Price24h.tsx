@@ -18,7 +18,7 @@ export const TableCell_Price24h = ({
   return (
     <td className={styles.price24h}>
       <span>{formatNumber(price_item, { currency: currencyCode })}</span>
-      <span className={styles[cls]}>{change_price_percent_24h}%</span>
+      <span className={cls}>{change_price_percent_24h}%</span>
     </td>
   );
 };
