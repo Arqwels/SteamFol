@@ -9,6 +9,8 @@ export interface Investment {
   dateBuyItem: string;
   updatedAt: string;
   skin: Skin;
+  changePercent: number;
+  changePrice: number;
 }
 
 export interface CreateInvestmentRequest {
