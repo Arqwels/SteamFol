@@ -74,6 +74,7 @@ export const TableRow = ({ row }: { row: TableData }) => {
           currencyCode={row.currencyCode}
         />
         <TableCell_24hProfit
+          count_items={row.count_items}
           change_price_profit_24h={row.change_price_profit_24h}
           currencyCode={row.currencyCode}
         />
