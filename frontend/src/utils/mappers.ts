@@ -4,8 +4,8 @@ import { Investment, TableData } from '../types';
  * Функция преобразует объект Investment (структура ответа API)
  * в объект TableData, пригодный для отображения в таблице.
  *
- * Здесь можно добавить вычисления (например, процентов или прибыли за 24 часа),
- * если соответствующие данные появятся.
+ * !Здесь можно добавить вычисления (например, процентов или прибыли за 24 часа),
+ * !если соответствующие данные появятся.
  */
 export function mapInvestmentToTableData(investment: Investment): TableData {
   return {
@@ -15,9 +15,8 @@ export function mapInvestmentToTableData(investment: Investment): TableData {
     market_name: investment.skin.market_name,
     market_hash_name: investment.skin.market_hash_name,
     price_item: investment.skin.price_skin,
-    //! Нужно будет сделать
-    change_price_percent_24h: 0,
-    change_price_profit_24h: 0,
+    change_price_percent_24h: investment.changePercent,
+    change_price_profit_24h: investment.changePrice,
     image_url: investment.skin.image_url,
     count_items: investment.countItems,
     buy_price: investment.buyPrice,
