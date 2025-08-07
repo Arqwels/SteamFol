@@ -2,6 +2,7 @@ const ExcelJS = require('exceljs');
 const { Invest, Skins, Portfolio } = require('../models');
 const ApiError = require('../exceptions/apiError');
 const { validationResult } = require('express-validator');
+const skinsHistoryPrice = require('../services/skinsHistoryPrice');
 
 class InvestmentController {
   async additionInvestment (req, res) {
@@ -61,6 +62,25 @@ class InvestmentController {
           },
         ],
       });
+
+      const idItem = investments.map(item => item.idItem);
+
+      let historyMap = {};
+
+      if (idItem.length > 0) {
+        const historyData = await skinsHistoryPrice.getting24Percent(idItem);
+        historyMap = Object.fromEntries(
+          historyData.map(item => [item.skinId, item])
+        );
+      }
+
+      for (const investment of investments) {
+        const skinId = investment.idItem;
+        const history = historyMap[skinId];
+
+        investment.setDataValue('changePrice', history?.changePrice || 0);
+        investment.setDataValue('changePercent', history?.changePercent || 0);
+      }
 
       return res.status(200).json(investments);
     } catch (error) {
