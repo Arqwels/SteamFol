@@ -56,7 +56,23 @@ class SkinsController {
     }
   };
 
-
+  /**
+   * @router POST /api/dev/skin/add-history/:id
+   * @description Добавляет одну или несколько записей в историю цен скина.
+   * 
+   * @param {Request} req
+   * @param {Response} res
+   * 
+   * @param {number} req.params.id - ID скина (обязательный)
+   * 
+   * @body {Object|Object[]} - JSON-объект или массив объектов:
+   *   @property {number} price_skin - Цена на момент записи
+   *   @property {string} recorded_at - Дата в ISO-формате ("2025-07-07T20:00:00.000Z")
+   * 
+   * @returns {200} Успех: { message: "История успешно добавлена!" }
+   * @returns {404} Если скин не найден { message: 'Скин был не найден!' }
+   * @returns {500} В случае ошибки на сервере { error: 'Ошибка при добавлении истории скина' }
+   */
   async addHistorySkin (req, res) {
     try {
       const { id } = req.params;

@@ -11,7 +11,6 @@ router.get('/skins-data', skinsController.skinsData);
 // http://localhost:5000/api/dev/skin/:id/history
 router.get('/skin/:id/history', skinsController.skinHistory);
 
-// http://localhost:5000/api/dev/skin/add-history/:id
 router.post('/skin/add-history/:id', skinsController.addHistorySkin);
 
 // http://localhost:5000/api/dev/skin/:id/24hours
