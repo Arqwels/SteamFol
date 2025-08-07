@@ -3,9 +3,6 @@ import { Investment, TableData } from '../types';
 /**
  * Функция преобразует объект Investment (структура ответа API)
  * в объект TableData, пригодный для отображения в таблице.
- *
- * !Здесь можно добавить вычисления (например, процентов или прибыли за 24 часа),
- * !если соответствующие данные появятся.
  */
 export function mapInvestmentToTableData(investment: Investment): TableData {
   return {
