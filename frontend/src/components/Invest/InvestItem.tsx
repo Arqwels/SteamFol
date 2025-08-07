@@ -5,6 +5,7 @@ import styles from './InvestItem.module.scss';
 import { Modal } from '../Modal/Modal';
 import PlusIcon from '../Svg/PlusIcon';
 import { getChangeClass } from '../../utils/getChangeClass';
+import { formatNumber } from '../../utils/formatNumber';
 
 interface InvestItemProps {
   data: TableData;
@@ -54,11 +55,6 @@ export const InvestItem = ({
     setBuyPrice(+value);
   };
 
-  const formatPrice = (price: number) => {
-    const formatted = price.toFixed(2).replace(/\.?0+$/, '');
-    return `${formatted} ${currencyCode || 'RUB'}`;
-  };
-
   useEffect(() => {
     if (active) {
       setCountItems(data.count_items);
@@ -85,7 +81,7 @@ export const InvestItem = ({
             <hr className={styles.divider} />
 
             <p className={styles.price}>
-              Текущая цена: <strong>{formatPrice(price_item)}</strong>
+              Текущая цена: <strong>{formatNumber(price_item, { currency: currencyCode })}</strong>
             </p>
 
             <hr className={styles.divider} />
@@ -100,7 +96,7 @@ export const InvestItem = ({
               <div className={styles.stat}>
                 <span className={styles.statLabel}>Изм. прибыли 24ч</span>
                 <span className={`${styles.statValue} ${cls}`}>
-                  {formatPrice(change_price_profit_24h)}
+                  {formatNumber(count_items * change_price_profit_24h, { currency: currencyCode })}
                 </span>
               </div>
             </div>
@@ -139,7 +135,7 @@ export const InvestItem = ({
 
               <div className={styles.total}>
                 <span className={styles.label}>Всего потрачено:</span>
-                <span className={styles.value}>{formatPrice(Number(buyPrice) * Number(countItems))}</span>
+                <span className={styles.value}>{formatNumber(Number(buyPrice) * Number(countItems), { currency: currencyCode })}</span>
               </div>
             </div>
           </section>
