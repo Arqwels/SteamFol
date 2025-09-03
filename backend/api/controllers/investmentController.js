@@ -3,6 +3,9 @@ const { Invest, Skins, Portfolio } = require('../models');
 const ApiError = require('../exceptions/apiError');
 const { validationResult } = require('express-validator');
 const skinsHistoryPrice = require('../services/skinsHistoryPrice');
+const { Op, QueryTypes }= require('sequelize');
+const sequelize = require('../../db');
+const { COMMISSION_RATE } = require('../utils/constants');
 
 class InvestmentController {
   async additionInvestment (req, res) {
@@ -10,20 +13,40 @@ class InvestmentController {
       const userId = req.user.id;
       const { portfolioId, idItem, countItems, buyPrice, dateBuyItem } = req.body;
 
-      // проверка владения портфелем
-      const portfolio = await Portfolio.findOne({ where: { id: portfolioId, userId } });
-      if (!portfolio) {
-        return res.status(403).json({ message: 'Нет доступа к этому портфелю' });
-      }
+      if (!portfolioId) return res.status(400).json({ message: 'portfolioId обязательный' });
 
       // проверка существования скина
       const existingSkin = await Skins.findByPk(idItem);
       if (!existingSkin) {
-        return res.status(400).json({ message: 'Записи с таким idItem не существует!' });
+        return res.status(400).json({ message: 'Скин не найден!' });
       }
 
-      await Invest.create({ portfolioId, idItem, countItems, buyPrice, dateBuyItem });
-      res.status(201).json({ message: 'Инвестиция успешно создана.' });
+      // создаём инвестицию
+      const investment = await Invest.create({
+        portfolioId,
+        idItem,
+        countItems,
+        buyPrice,
+        dateBuyItem
+      });
+
+      // подтягиваем все данные о скине
+      const fullInvestment = await Invest.findByPk(investment.id, {
+        include: [
+          { model: Skins, as: 'skin' }
+        ]
+      });
+
+      // Получаем историю изменений цены для нового скина
+      const historyMap = await skinsHistoryPrice.getHistoryMap([fullInvestment.idItem]);
+      const { changePrice = 0, changePercent = 0 } = historyMap[fullInvestment.idItem] || {};
+      fullInvestment.setDataValue('changePrice', changePrice);
+      fullInvestment.setDataValue('changePercent', changePercent);
+
+      res.status(201).json({
+        message: 'Инвестиция успешно создана',
+        investment: fullInvestment
+      });
     } catch (error) {
       console.error('Ошибка при добавлении инвестиций!', error);
       return res.status(500).json({ message: 'Ошибка при добавлении инвестиций!' });
@@ -33,22 +56,29 @@ class InvestmentController {
   async receivingInvestments (req, res) {
     try {
       const userId = req.user.id;
-      const { portfolioId } = req.query;
-      const pid = portfolioId ? Number(portfolioId) : null;
+      const { portfolioId, limit: qLimit, lastId: qLastId } = req.query;
 
+      let limit = qLimit !== undefined ? Number(qLimit) : 25;
+      if (Number.isNaN(limit) || limit <= 0) limit = 25;
+      const MAX_LIMIT = 100;
+      if (limit > MAX_LIMIT) limit = MAX_LIMIT;
+
+      const pid = portfolioId ? Number(portfolioId) : null;
       if (portfolioId && isNaN(pid)) {
         return res.status(400).json({ message: 'Неверный портфель ID' });
       }
 
-      if (pid) {
-        const ok = await Portfolio.findOne({ where: { id: pid, userId } });
-        if (!ok) {
-          return res.status(403).json({ message: 'Нет доступа к этому портфелю' });
+      const where = pid ? { portfolioId: pid } : {};
+      if (qLastId !== undefined && qLastId !== null && qLastId !== '') {
+        const lastId = Number(qLastId);
+        if (!Number.isNaN(lastId)) {
+          // сортировка DESC — берем записи c id < lastId
+          where.id = { [Op.lt]: lastId };
         }
       }
 
       const investments = await Invest.findAll({
-        where: pid ? { portfolioId: pid } : {},
+        where,
         include: [
           {
             model: Portfolio,
@@ -61,28 +91,29 @@ class InvestmentController {
             as: 'skin'
           },
         ],
+        limit,
+        order: [['id', 'DESC']],
       });
 
       const idItem = investments.map(item => item.idItem);
-
       let historyMap = {};
-
       if (idItem.length > 0) {
-        const historyData = await skinsHistoryPrice.getting24Percent(idItem);
-        historyMap = Object.fromEntries(
-          historyData.map(item => [item.skinId, item])
-        );
+        historyMap = await skinsHistoryPrice.getHistoryMap(idItem);
       }
 
-      for (const investment of investments) {
-        const skinId = investment.idItem;
-        const history = historyMap[skinId];
-
-        investment.setDataValue('changePrice', history?.changePrice || 0);
-        investment.setDataValue('changePercent', history?.changePercent || 0);
+      for (const inv of investments) {
+        const { changePrice = 0, changePercent = 0 } = historyMap[inv.idItem] || {};
+        inv.setDataValue('changePrice', changePrice);
+        inv.setDataValue('changePercent', changePercent);
       }
 
-      return res.status(200).json(investments);
+      const last = investments.length ? investments[investments.length - 1].id : null;
+      const hasMore = investments.length === limit;
+
+      return res.status(200).json({
+        investments,
+        meta: { lastId: last, hasMore, limit },
+      });
     } catch (error) {
       console.error('Ошибка при получении инвестиций!', error);
       return res.status(500).json({ message: 'Ошибка при получении инвестиций!' });
@@ -111,7 +142,36 @@ class InvestmentController {
       const { countItems, buyPrice } = req.body;
       await investment.update({ countItems, buyPrice });
 
-      return res.status(200).json({ message: 'Инвестиция успешно обновлена!' });
+      const updated = await Invest.findByPk(investmentId, {
+        include: [
+          {
+            model: Portfolio,
+            as: 'portfolio',
+            attributes: ['id', 'namePortfolio']
+          },
+          {
+            model: Skins,
+            as: 'skin'
+          },
+        ],
+      });
+
+      if (!updated) {
+        return res.status(500).json({ message: 'Ошибка: не удалось получить обновлённую запись' });
+      }
+
+      const historyMap = await skinsHistoryPrice.getHistoryMap([updated.idItem]);
+      const { changePrice = 0, changePercent = 0 } = historyMap[updated.idItem] || {};
+
+      // подготовим plain объект
+      const updatedPlain = updated.get ? updated.get({ plain: true }) : updated;
+      updatedPlain.changePrice = changePrice;
+      updatedPlain.changePercent = changePercent;
+
+      return res.status(200).json({
+        message: 'Инвестиция успешно обновлена!',
+        investment: updatedPlain
+      });
     } catch (error) {
       console.error(`Ошибка при обновлении инвестиции ${req.params.id}:`, error);
       return res.status(500).json({ message: 'Ошибка при обновлении инвестиции!' });
@@ -145,13 +205,6 @@ class InvestmentController {
       const pid = portfolioId ? Number(portfolioId) : null;
       if (portfolioId && isNaN(pid)) {
         return res.status(400).json({ message: 'Неверный портфель ID' });
-      }
-
-      if (pid) {
-        const ok = await Portfolio.findOne({ where: { id: pid, userId } });
-        if (!ok) {
-          return res.status(403).json({ message: 'Нет доступа к этому портфелю' });
-        }
       }
 
       const investments = await Invest.findAll({
@@ -210,6 +263,49 @@ class InvestmentController {
     } catch (error) {
       console.error('Ошибка при экспорте инвестиций!', error);
       return res.status(500).json({ message: 'Ошибка при экспорте инвестиций!' });
+    }
+  }
+
+  /**
+   * @router GET /api/investment/:portfolioId/summary
+   * @description Рассчитывает summary инвестиций для портфеля
+   */
+  async summaryInvestments(req, res) {
+    const portfolioId = Number(req.params.portfolioId);
+    if (!portfolioId) return res.status(400).json({ message: 'portfolioId обязательный' });
+
+    try {
+      const sql = `
+        SELECT
+          COALESCE(SUM(i."countItems" * i."buyPrice"), 0) AS "totalInvested",
+          COALESCE(SUM(i."countItems" * s.price_skin), 0) AS "currentBalance",
+          COALESCE(SUM(i."countItems" * s.price_skin) - SUM(i."countItems" * i."buyPrice"), 0) AS "grossProfit"
+        FROM invests i
+        LEFT JOIN skins s ON s.id = i."idItem"
+        WHERE i."portfolioId" = :portfolioId
+      `;
+
+      const [row] = await sequelize.query(sql, {
+        replacements: { portfolioId },
+        type: QueryTypes.SELECT,
+      });
+
+      const totalInvested = Number(row.totalInvested ?? 0);
+      const currentBalance = Number(row.currentBalance ?? 0);
+      const grossProfit = currentBalance - totalInvested;
+
+      const currentBalanceNet = currentBalance * (1 - COMMISSION_RATE);
+      const netProfit = currentBalanceNet - totalInvested;
+
+      return res.json({
+        totalInvested: +totalInvested.toFixed(2),
+        currentBalance: +currentBalance.toFixed(2),
+        grossProfit: +grossProfit.toFixed(2),
+        netProfit: +netProfit.toFixed(2),
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: 'Ошибка при получении всего инвестиций, тек. баланса и общей прибыли' });
     }
   }
 }
