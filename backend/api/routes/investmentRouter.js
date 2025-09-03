@@ -2,17 +2,18 @@ const { Router } = require('express');
 const investmentController = require('../controllers/investmentController');
 const router = Router();
 const { body } = require('express-validator');
+const checkPortfolioOwnership = require('../middlewares/checkPortfolioOwnership');
 
-// Создание инвестиции
-// POST http://localhost:5000/api/investment
-router.post('/', investmentController.additionInvestment);
+// Создание инвестиции (portfolioId в body)
+router.post('/', checkPortfolioOwnership, investmentController.additionInvestment);
 
-// Получение инвестиций
-// GET http://localhost:5000/api/investment?portfolioId=1
-router.get('/', investmentController.receivingInvestments);
+// Получение инвестиций (portfolioId в query)
+router.get('/', checkPortfolioOwnership, investmentController.receivingInvestments);
+
+// Общая сумма инвестиций
+router.get('/:portfolioId/summary', checkPortfolioOwnership, investmentController.summaryInvestments);
 
 // Обновление инвестиции
-// PUT http://localhost:5000/api/investment/:id
 router.put(
   '/:id',
   body('countItems')
@@ -25,11 +26,9 @@ router.put(
 );
 
 // Удаление инвестиции
-// DELETE http://localhost:5000/api/investment/:id
 router.delete('/:id', investmentController.deleteInvestment);
 
-// Экспорт инвестиций в Excel (с фильтром по portfolioId)
-// GET http://localhost:5000/api/investment/export?portfolioId=1
-router.get('/export', investmentController.exportInvestments);
+// Экспорт инвестиций в Excel (portfolioId в query)
+router.get('/export', checkPortfolioOwnership, investmentController.exportInvestments);
 
 module.exports = router;
