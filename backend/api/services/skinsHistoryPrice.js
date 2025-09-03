@@ -45,6 +45,14 @@ class SkinsHistoryPrice {
       return { skinId: row.skinId, changePrice, changePercent };
     });
   }
+
+  async getHistoryMap(skinIds) {
+    if (!skinIds || (Array.isArray(skinIds) && skinIds.length === 0)) {
+      return {};
+    }
+    const rows = await this.getting24Percent(skinIds);
+    return Object.fromEntries(rows.map(item => [item.skinId, item]));
+  }
 }
 
 module.exports = new SkinsHistoryPrice();
