@@ -1,0 +1,1 @@
+export const COMMISSION_RATE = 15 / 115; // ≈ 0.13043478
